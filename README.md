@@ -8,7 +8,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/bloodhunterd/backup?style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 [![Docker Stars](https://img.shields.io/docker/stars/bloodhunterd/backup?style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P51U5SZ)
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/bloodhunterd)
 
 # Backup
 
