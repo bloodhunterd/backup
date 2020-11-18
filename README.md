@@ -4,7 +4,7 @@
 [![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-blueviolet?style=for-the-badge)](https://github.com/phpstan/phpstan)
 [![License](https://img.shields.io/github/license/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/LICENSE)
 
-[![Docker Build](https://img.shields.io/docker/cloud/build/bloodhunterd/backup?style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
+[![Docker Build](https://img.shields.io/github/workflow/status/bloodhunterd/backup/Docker?label=Docker%20Build&style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bloodhunterd/backup?style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 [![Docker Stars](https://img.shields.io/docker/stars/bloodhunterd/backup?style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 
