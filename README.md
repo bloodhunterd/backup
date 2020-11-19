@@ -1,25 +1,21 @@
 [![Release](https://img.shields.io/github/v/release/bloodhunterd/backup?include_prereleases&style=for-the-badge)](https://github.com/bloodhunterd/backup/releases)
-[![Build](https://img.shields.io/travis/bloodhunterd/backup?style=for-the-badge)](https://travis-ci.com/github/bloodhunterd/backup)
-[![PHP](https://img.shields.io/badge/PHP-%5E7.3-blue?style=for-the-badge)](https://www.php.net/)
-[![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-blueviolet?style=for-the-badge)](https://github.com/phpstan/phpstan)
+[![Travis](https://img.shields.io/travis/bloodhunterd/backup?label=Travis&style=for-the-badge)](https://travis-ci.com/github/bloodhunterd/backup)
+[![Docker](https://img.shields.io/github/workflow/status/bloodhunterd/backup/Docker?label=Docker&style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 [![License](https://img.shields.io/github/license/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/LICENSE)
-
-[![Docker Build](https://img.shields.io/github/workflow/status/bloodhunterd/backup/Docker?label=Docker%20Build&style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
-[![Docker Pulls](https://img.shields.io/docker/pulls/bloodhunterd/backup?style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
-[![Docker Stars](https://img.shields.io/docker/stars/bloodhunterd/backup?style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/bloodhunterd)
 
 # Backup
 
-A simple application to back up files, databases and download them securely.
+Backup is an application to manage files and database backups. It supports compression, encrypted transfer, email reports and command execution before and after the backup process.
 
 ## Features
 
 * Simple configuration
-* Dump normal and dockerized databases
+* Supports dockerized databases
 * Strong compression
-* Secure downloads through encryption
+* Secure, encrypted transfer
+* Email report
 * Shows backup size and duration
 * Execute commands before and after
 
@@ -57,13 +53,14 @@ The docker image already includes everything.
 Download the Phar file and place it somewhere on your server.  
 For example at **/srv/**.
 
-[![Backup App](https://img.shields.io/badge/Download-Backup%20App-blue?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/build/backup.phar)
+[![Backup App](https://img.shields.io/badge/Download-Backup%20App-blue?style=for-the-badge)](https://github.com/bloodhunterd/backup/raw/master/build/backup.phar)
 
 Download the distributed agent and manager configuration files and place it somewhere on your server.  
 For example also at **/srv/**.
 
-<a name="agent-config"></a>[![Agent Configuration](https://img.shields.io/badge/Download-Agent%20Configuration-blue?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/dist/agent.dist.json)
-<a name="manager-config"></a>[![Manager Configuration](https://img.shields.io/badge/Download-Manager%20Configuration-blue?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/dist/manager.dist.json)
+<a name="config"></a>
+[![Agent Configuration](https://img.shields.io/badge/Download-Agent%20Configuration-blue?style=for-the-badge)](https://raw.githubusercontent.com/bloodhunterd/backup/master/dist/agent.dist.json)
+[![Manager Configuration](https://img.shields.io/badge/Download-Manager%20Configuration-blue?style=for-the-badge)](https://raw.githubusercontent.com/bloodhunterd/backup/master/dist/manager.dist.json)
 
 Adjust the configuration file for your needs and add an entry into the Cron table to execute this application periodically.
 
@@ -77,9 +74,9 @@ Adjust the configuration file for your needs and add an entry into the Cron tabl
 
 Download, rename and adjust the distributed Docker Compose file.
 
-[![Docker Compose](https://img.shields.io/badge/Download-Docker%20Compose-blue?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/dist/docker-compose.dist.yml)
+[![Docker Compose](https://img.shields.io/badge/Download-Docker%20Compose-blue?style=for-the-badge)](https://github.com/bloodhunterd/backup/raw/master/dist/docker-compose.dist.yml)
 
-Download, rename and adjust the distributed [agent](#agent-config) and [manager](#manager-config) configuration files.
+Download, rename and adjust the distributed agent and manager [configuration](#config) files.
 
 #### Configuration
 
@@ -105,26 +102,11 @@ Download, rename and adjust the distributed [agent](#agent-config) and [manager]
 
 ##### Volumes
 
-Mount the backup directory.
-
-```bash
-volumes:
-  - ./backup/:/srv/backup/
-```
-
-Mount the configuration file as read only.
-
-```bash
-volumes:
-  - ./backup.json:/srv/backup.json:ro
-```
-
-Mount the open ssh private key as read only.
-
-```bash
-volumes:
-  - ./id_rsa/:/srv/id_rsa:ro
-```
+| Volume | Path | Read only | Description
+|--- |--- |--- |---
+| Backup directory | /srv/backup/ | &#10007; | Backup directory path
+| Configuration | /srv/backup.json | &#10003; | Configuration file path
+| Private key | /srv/id_rsa | &#10003; | OpenSSH private key file path
 
 ### Note
 
@@ -148,9 +130,6 @@ docker-compose up -d
   * [Validator](https://github.com/Vection-Framework/Validator)
 * [Monolog](https://github.com/Seldaek/monolog)
 * [Twig](https://twig.symfony.com/)
-
-### Docker image
-
 * [PHP](https://www.php.net/)
 * [mSMTP](https://marlam.de/msmtp/)
 * [Debian](https://www.debian.org/)
