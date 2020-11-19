@@ -153,7 +153,7 @@ class DirectoryModel implements Compressible
     /**
      * Set commands
      *
-     * @param array $commands
+     * @param string[] $commands
      */
     public function setCommands(array $commands): void
     {

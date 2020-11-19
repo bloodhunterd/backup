@@ -133,7 +133,7 @@ class Agent implements Backup
                 self::TYPE_DIRECTORY,
                 'Files archived.',
                 $directoryModel,
-                $fileSize,
+                $fileSize ?: null,
                 $duration
             );
         }
@@ -196,7 +196,7 @@ class Agent implements Backup
                 self::TYPE_DATABASE,
                 'Files archived.',
                 $databaseModel,
-                $fileSize,
+                $fileSize ?: null,
                 $duration
             );
         }

@@ -39,7 +39,7 @@ class Tool
     public const TIME_HOURS = 256;
 
     /**
-     * @var int
+     * @var int|float
      */
     private $durationStart = 0;
 
@@ -204,7 +204,7 @@ class Tool
      */
     public function getDuration(): int
     {
-        return hrtime(true) - $this->durationStart;
+        return (int) (hrtime(true) - $this->durationStart);
     }
 
     /**
