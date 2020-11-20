@@ -240,28 +240,20 @@ class Agent implements Backup
 
         $directory->setArchive(Tool::sanitize($name));
 
-        try {
-            $cmdBefore = $directory->getCommandBefore();
-            if ($cmdBefore) {
-                $this->tool->execute($cmdBefore);
+        $cmdBefore = $directory->getCommandBefore();
+        if ($cmdBefore) {
+            $this->tool->execute($cmdBefore);
 
-                $this->logger->use('app')->info(sprintf('Command was executed: %s', 'BEFORE'));
-            }
-
-            $this->tool->createArchive($directory);
-
-            $cmdAfter = $directory->getCommandAfter();
-            if ($cmdAfter) {
-                $this->tool->execute($cmdAfter);
-
-                $this->logger->use('app')->info(sprintf('Command was executed: %s', 'AFTER'));
-            }
-        } catch (ToolException $e) {
-            $msg = sprintf('Failed to create archive for directory "%s".', $name);
-
-            throw new DirectoryException($msg, 0, $e);
+            $this->logger->use('app')->info(sprintf('Command was executed: %s', 'BEFORE'));
         }
 
-        $this->logger->use('app')->info(sprintf('Archive of directory "%s" created.', $name));
+        $this->tool->createArchive($directory);
+
+        $cmdAfter = $directory->getCommandAfter();
+        if ($cmdAfter) {
+            $this->tool->execute($cmdAfter);
+
+            $this->logger->use('app')->info(sprintf('Command was executed: %s', 'AFTER'));
+        }
     }
 }

@@ -2,11 +2,12 @@
 
 All notable changes will be documented in this file.
 
-## Master - 19.11.2020
+## Master - 20.11.2020
 
 * Merged with previously separated docker repository
 * Added email validation
 * Added Ko-fi link
+* Fixed issue #12 Execute command after backup even if an error occurred
 * Fixed issue #11 Wrong display of seconds in duration time
 * Resolved issue #8 Execute command before and after backup
 * Resolved issue #7 Convert size and duration in a unit that fit best

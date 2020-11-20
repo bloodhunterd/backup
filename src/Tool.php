@@ -157,7 +157,24 @@ class Tool
             escapeshellarg($object->getSource())
         );
 
-        $this->execute($cmd);
+        try {
+            $this->execute($cmd);
+        } catch (ToolException $e) {
+            switch ($e->getCode()) {
+                case 1:
+                    $msg = ' Some files changed while archiving.';
+                    break;
+                case 2:
+                    $msg = ' A fatal, unrecoverable error occurred.';
+                    break;
+            }
+
+            $this->logger->use('app')->error(
+                sprintf('Failed to create archive for "%s.%s".', $object->getName(), $msg)
+            );
+
+            return;
+        }
 
         $this->logger->use('app')->info(sprintf('Archive "%s" created.', $target));
     }
