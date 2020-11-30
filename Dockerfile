@@ -4,8 +4,8 @@ FROM debian:stable-slim
 # Environment vars
 # ===================================================
 
-ARG APP_VERSION=master
-ARG PHP_VERSION=7.4
+ARG PHAR_PATH='./backup.phar'
+ARG PHP_VERSION=8.0
 
 ENV TZ 'Europe/Berlin'
 
@@ -72,14 +72,14 @@ RUN apt-get install -y --no-install-recommends \
 RUN echo "sendmail_path = /usr/bin/msmtp -t" >> /etc/php/${PHP_VERSION}/cli/php.ini
 
 # ===================================================
-# Backup application
+# Application
 # ===================================================
 
 RUN mkdir /backup
 
-RUN wget -O /srv/backup.phar https://github.com/bloodhunterd/backup/raw/${APP_VERSION}/build/backup.phar
-
 RUN touch /var/log/backup.log
+
+COPY ${PHAR_PATH} /srv/backup.phar
 
 COPY ./start.sh /
 
