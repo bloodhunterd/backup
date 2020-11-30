@@ -4,6 +4,7 @@ All notable changes will be documented in this file.
 
 ## Master - 20.11.2020
 
+* Added missing BZIP2 package (Docker)
 * Merged with previously separated docker repository
 * Added email validation
 * Added Ko-fi link

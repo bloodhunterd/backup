@@ -58,7 +58,6 @@ For example at **/srv/**.
 Download the distributed agent and manager configuration files and place it somewhere on your server.  
 For example also at **/srv/**.
 
-<a name="config"></a>
 [![Agent Configuration](https://img.shields.io/badge/Download-Agent%20Configuration-blue?style=for-the-badge)](https://raw.githubusercontent.com/bloodhunterd/backup/master/dist/agent.dist.json)
 [![Manager Configuration](https://img.shields.io/badge/Download-Manager%20Configuration-blue?style=for-the-badge)](https://raw.githubusercontent.com/bloodhunterd/backup/master/dist/manager.dist.json)
 
@@ -76,7 +75,7 @@ Download, rename and adjust the distributed Docker Compose file.
 
 [![Docker Compose](https://img.shields.io/badge/Download-Docker%20Compose-blue?style=for-the-badge)](https://github.com/bloodhunterd/backup/raw/master/dist/docker-compose.dist.yml)
 
-Download, rename and adjust the distributed agent and manager [configuration](#config) files.
+Download, rename and adjust the distributed agent and manager configuration files.
 
 #### Configuration
 

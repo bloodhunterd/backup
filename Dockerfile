@@ -55,6 +55,7 @@ RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 # ===================================================
 
 RUN apt-get install -y --no-install-recommends \
+    bzip2 \
     cron \
     msmtp \
     openssh-client \
