@@ -4,7 +4,6 @@ FROM debian:stable-slim
 # Environment vars
 # ===================================================
 
-ARG PHAR_PATH='./backup.phar'
 ARG PHP_VERSION=8.0
 
 ENV TZ 'Europe/Berlin'
@@ -62,7 +61,6 @@ RUN apt-get install -y --no-install-recommends \
     php${PHP_VERSION}-bz2 \
     php${PHP_VERSION}-cli \
     php${PHP_VERSION}-intl \
-    php${PHP_VERSION}-json \
     rsync
 
 # ===================================================
@@ -79,7 +77,7 @@ RUN mkdir /backup
 
 RUN touch /var/log/backup.log
 
-COPY ${PHAR_PATH} /srv/backup.phar
+COPY ./build/backup.phar /srv/backup.phar
 
 COPY ./start.sh /
 

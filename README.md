@@ -1,6 +1,5 @@
-[![Release](https://img.shields.io/github/v/release/bloodhunterd/backup?include_prereleases&style=for-the-badge)](https://github.com/bloodhunterd/backup/releases)
+[![Release](https://img.shields.io/github/v/release/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/releases)
 [![Travis](https://img.shields.io/travis/bloodhunterd/backup?label=Travis&style=for-the-badge)](https://travis-ci.com/github/bloodhunterd/backup)
-[![Docker](https://img.shields.io/github/workflow/status/bloodhunterd/backup/Docker?label=Docker&style=for-the-badge)](https://hub.docker.com/r/bloodhunterd/backup)
 [![License](https://img.shields.io/github/license/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/LICENSE)
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/bloodhunterd)

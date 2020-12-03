@@ -1,0 +1,100 @@
+name: Backup
+
+on:
+  push:
+    branches:
+      - master
+
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  phar:
+    name: Release
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Prepare the environment variables
+        run: |
+          echo "SERVER_URL=$GITHUB_SERVER_URL" >> $GITHUB_ENV
+          echo "REPOSITORY=$GITHUB_REPOSITORY" >> $GITHUB_ENV
+          echo "VERSION=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
+
+      - name: Install the dependencies
+        run: composer install --prefer-dist --no-dev --no-progress
+
+      - name: Compile the Phar application
+        run: |
+          php -d phar.readonly=0 ./build/compile.php
+
+      - name: Log into and push the image to Docker Hub registry
+        uses: docker/build-push-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          repository: ${{ env.REPOSITORY }}
+          tag_with_ref: true
+
+      - name: Create the release
+        if: env.VERSION != 'master'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_name: ${{ env.VERSION }}
+          tag_name: ${{ env.VERSION }}
+          body: |
+            See [changelog](${{ env.SERVER_URL }}/${{ env.REPOSITORY }}/blob/master/CHANGELOG.md#${{ env.VERSION }}).
+          draft: false
+          prerelease: false
+
+      - name: Add the Phar application to the release
+        if: env.VERSION != 'master'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/backup.phar
+          asset_name: Backup-${{ env.VERSION }}.phar
+          asset_content_type: application/zip
+
+      - name: Add the Agent distribution configuration to the release
+        if: env.VERSION != 'master'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/agent.dist.json
+          asset_name: Backup-${{ env.VERSION }}-Agent.json
+          asset_content_type: application/json
+
+      - name: Add the Docker Compose distribution configuration to the release
+        if: env.VERSION != 'master'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/docker-compose.dist.yml
+          asset_name: Backup-${{ env.VERSION }}-Docker-Compose.yml
+          asset_content_type: application/yaml
+
+      - name: Add the Manager distribution configuration to the release
+        if: env.VERSION != 'master'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/manager.dist.json
+          asset_name: Backup-${{ env.VERSION }}-Manager.json
+          asset_content_type: application/json

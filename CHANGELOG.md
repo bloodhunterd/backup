@@ -2,8 +2,9 @@
 
 All notable changes will be documented in this file.
 
-## Master - 20.11.2020
+## Master - 03.12.2020
 
+* Updated PHP version to 8.0 on Docker image
 * Added missing BZIP2 package (Docker)
 * Merged with previously separated docker repository
 * Added email validation
