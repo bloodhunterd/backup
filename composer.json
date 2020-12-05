@@ -6,8 +6,8 @@
         "ext-intl": "*",
         "ext-json": "*",
         "monolog/monolog": "^2.0",
-        "vection-framework/di-container": "^0.2",
-        "vection-framework/validator": "^0.2",
+        "vection-framework/di-container": "^0.3",
+        "vection-framework/validator": "^0.3",
         "twig/twig": "^3.0"
     },
     "require-dev": {
