@@ -224,7 +224,7 @@ class DatabaseService
     {
         $name = $this->database->getName();
 
-        $this->database->setSource($this->tool->sanitize($name) . '.' . $schema . '.sql');
+        $this->database->setSource($this->tool::sanitize($name) . '.' . $schema . '.sql');
 
         try {
             $this->tool->execute($this->getSchemaDumpCmd($schema));
@@ -234,7 +234,7 @@ class DatabaseService
             throw new DatabaseException($msg, 0, $e);
         }
 
-        $this->database->setArchive($this->tool->sanitize($name) . '.' . $schema);
+        $this->database->setArchive($this->tool::sanitize($name) . '.' . $schema);
 
         try {
             $this->tool->createArchive($this->database);
