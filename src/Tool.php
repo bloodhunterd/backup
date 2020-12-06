@@ -167,6 +167,8 @@ class Tool
                 case 2:
                     $msg = ' A fatal, unrecoverable error occurred.';
                     break;
+                default:
+                    $msg = ' Unknown error occurred.';
             }
 
             $this->logger->use('app')->error(

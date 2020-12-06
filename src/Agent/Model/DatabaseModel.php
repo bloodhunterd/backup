@@ -4,7 +4,7 @@
  * This file is part of the Backup project.
  * Visit project at https://github.com/bloodhunterd/backup
  *
- * Copyright © 2019 BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * Copyright © 2020 BloodhunterD <bloodhunterd@bloodhunterd.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,6 +16,7 @@ namespace Backup\Agent\Model;
 
 use Backup\Interfaces\Compressible;
 use Backup\Agent\Service\DatabaseService;
+use Vection\Component\DI\Traits\AnnotationInjection;
 
 /**
  * Class DatabaseModel
@@ -26,6 +27,7 @@ use Backup\Agent\Service\DatabaseService;
  */
 class DatabaseModel implements Compressible
 {
+    use AnnotationInjection;
 
     /**
      * @var string
@@ -40,7 +42,12 @@ class DatabaseModel implements Compressible
     /**
      * @var string
      */
-    private $type = 'host';
+    private $system;
+
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * @var string
@@ -50,17 +57,17 @@ class DatabaseModel implements Compressible
     /**
      * @var string
      */
-    private $host = 'localhost';
+    private $host;
 
     /**
      * @var string
      */
-    private $user = 'root';
+    private $user;
 
     /**
      * @var string
      */
-    private $password = '';
+    private $password;
 
     /**
      * @var string
@@ -70,7 +77,7 @@ class DatabaseModel implements Compressible
     /**
      * @var string
      */
-    private $target = DIRECTORY_SEPARATOR;
+    private $target;
 
     /**
      * @var bool
@@ -93,10 +100,11 @@ class DatabaseModel implements Compressible
         $this->setSource('');
 
         # Optional
-        $this->setTarget($database['target'] ?? $this->target);
-        $this->setType($source['type'] ?? $this->type);
-        $this->setUser($source['user'] ?? $this->user);
-        $this->setPassword($source['password'] ?? $this->password);
+        $this->setTarget($database['target'] ?? DIRECTORY_SEPARATOR);
+        $this->setSystem($source['system'] ?? DatabaseService::SYSTEM_MYSQL);
+        $this->setType($source['type'] ?? DatabaseService::TYPE_HOST);
+        $this->setUser($source['user'] ?? 'root');
+        $this->setPassword($source['password'] ?? '');
 
         if (isset($database['disabled']) && $database['disabled'] === 'yes') {
             $this->disable();
@@ -108,7 +116,7 @@ class DatabaseModel implements Compressible
             $this->setDockerContainer($source['container']);
         } else {
             # Optional
-            $this->setHost($source['host'] ?? $this->host);
+            $this->setHost($source['host'] ?? 'localhost');
         }
     }
 
@@ -184,6 +192,26 @@ class DatabaseModel implements Compressible
     public function getArchive(): string
     {
         return $this->archive;
+    }
+
+    /**
+     * Set the system
+     *
+     * @param string $system
+     */
+    public function setSystem(string $system): void
+    {
+        $this->system = $system;
+    }
+
+    /**
+     * Get the system
+     *
+     * @return string
+     */
+    public function getSystem(): string
+    {
+        return $this->system;
     }
 
     /**

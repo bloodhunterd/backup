@@ -41,7 +41,8 @@
       {
         "name": "First database",
         "source": {
-          "type": "local",
+          "system": "mariadb",
+          "type": "host",
           "host": "localhost",
           "user": "root",
           "password": "SecretPassword"
@@ -51,8 +52,9 @@
       }, {
         "name": "Second database",
         "source": {
+          "system": "mongodb",
           "type": "docker",
-          "container": "container_name"
+          "container": "The container name"
         },
         "target": "/second/database"
       }
