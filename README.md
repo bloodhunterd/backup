@@ -11,12 +11,13 @@ Backup is an application to organize file and database backups. It supports comp
 ## Features
 
 * Simple configuration
-* Supports dockerized databases
-* Strong compression
-* Secure, encrypted transfer
-* Email report
-* Shows backup size and duration
+* Strong compression (***bzip2***)
+* Supports MySQL, MariaDB and MongoDB
+* Supports ***dockerized*** databases
 * Execute commands before and after
+* Secure and encrypted transfers
+* Email reports
+* Shows backup size and duration
 
 ## Requirements
 
