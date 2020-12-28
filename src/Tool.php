@@ -143,18 +143,16 @@ class Tool
     /**
      * Create an archive
      *
-     * @param Compressible $object
-     *
-     * @throws ToolException
+     * @param Compressible $compressible
      */
-    public function createArchive(Compressible $object): void
+    public function createArchive(Compressible $compressible): void
     {
-        $target = $object->getTarget() . DIRECTORY_SEPARATOR . $object->getArchive();
+        $target = $compressible->getTarget() . DIRECTORY_SEPARATOR . $compressible->getArchive();
 
         $cmd = sprintf(
             'tar -cjf %s %s',
             escapeshellarg($this->config->getTargetDirectory() . $target),
-            escapeshellarg($object->getSource())
+            escapeshellarg($compressible->getSource())
         );
 
         try {
@@ -172,7 +170,7 @@ class Tool
             }
 
             $this->logger->use('app')->error(
-                sprintf('Failed to create archive for "%s.%s".', $object->getName(), $msg)
+                sprintf('Failed to create archive for "%s.%s".', $compressible->getName(), $msg)
             );
 
             return;
