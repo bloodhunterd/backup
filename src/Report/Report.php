@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Backup\Report;
 
 use Backup\Configuration;
+use Backup\Exception\BackupException;
 use Backup\Interfaces\Backup;
 use Backup\Report\Model\ReportRecipientModel;
 use Backup\Report\Model\ReportSenderModel;
@@ -150,7 +151,7 @@ class Report
     /**
      * Send the report
      *
-     * @throws LoaderError|SyntaxError|RuntimeError
+     * @throws BackupException
      */
     public function send(): bool
     {
@@ -245,7 +246,11 @@ class Report
 
         $dateTime = strftime('%x %X');
 
-        $mail = $twig->render('report.twig', compact('backups', 'errorOccurred', 'dateTime'));
+        try {
+            $mail = $twig->render('report.twig', compact('backups', 'errorOccurred', 'dateTime'));
+        } catch (LoaderError | RuntimeError | SyntaxError $e) {
+            throw new BackupException('Failed to render mail template.', 0, $e->getPrevious());
+        }
 
         # The subject is a header and headers are only allowed to contain ASCII chars,
         # so we need to encode the subject like described in RFC 1342
