@@ -12,7 +12,7 @@ Backup is an application to organize file and database backups. It supports comp
 
 * Simple configuration
 * Strong compression (***bzip2***)
-* Supports MySQL, MariaDB and MongoDB
+* Supports [MariaDB](https://mariadb.org/), [MongoDB](https://www.mongodb.com/) and [MySQL](https://www.mysql.com/)
 * Supports ***dockerized*** databases
 * Execute commands before and after
 * Secure and encrypted transfers
