@@ -22,6 +22,7 @@ use Backup\Agent\Model\DatabaseModel;
 use Backup\Tool;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
+use function in_array;
 
 /**
  * Class MySqlService
@@ -76,9 +77,9 @@ class MySqlService
         }
 
         if ($this->database->getType() === DatabaseService::TYPE_DOCKER) {
-            $cmd = $this->getDockerMySqlCmd($this->getSchemataQuery());
+            $cmd = $this->getDockerCommand($this->getSchemataQuery());
         } else {
-            $cmd = $this->getHostMySqlCmd($this->getSchemataQuery());
+            $cmd = $this->getHostCommand($this->getSchemataQuery());
         }
 
         # Get all available database schemata
@@ -104,12 +105,12 @@ class MySqlService
     }
 
     /**
-     * Prepare host MySQL command
+     * Prepare host command
      *
      * @param string $query
      * @return string
      */
-    private function getHostMySqlCmd(string $query): string
+    private function getHostCommand(string $query): string
     {
         $cmd = 'mysql%s%s%s --skip-column-names -e \'%s;\'';
 
@@ -117,12 +118,12 @@ class MySqlService
     }
 
     /**
-     * Prepare Docker MySQL command
+     * Prepare Docker command
      *
      * @param string $query
      * @return string
      */
-    private function getDockerMySqlCmd(string $query): string
+    private function getDockerCommand(string $query): string
     {
         $cmd = 'docker exec %s sh -c "mysql%s%s --skip-column-names -e \'%s;\'"';
 
@@ -179,12 +180,10 @@ class MySqlService
             # Handle Docker Compose environment vars
             if (in_array($password, self::PASSWORDS, true)) {
                 $password = self::ENV . $password;
+            } else if ($password === self::NO_PASSWORD) {
+                $password = false;
             } else {
-                if ($password === self::NO_PASSWORD) {
-                    $password = false;
-                } else {
-                    $password = $password ? escapeshellarg($password) : false;
-                }
+                $password = $password ? escapeshellarg($password) : false;
             }
         } else {
             $password = $password ? escapeshellarg($password) : false;
@@ -226,7 +225,7 @@ class MySqlService
         $this->database->setSource($this->tool::sanitize($name) . '.' . $schema . '.sql');
 
         try {
-            $this->tool->execute($this->getSchemaDumpCmd($schema));
+            $this->tool->execute($this->getSchemaDumpCommand($schema));
         } catch (ToolException $e) {
             $msg = sprintf('Failed to create dump for schema "%s" of database backup "%s".', $schema, $name);
 
@@ -238,21 +237,21 @@ class MySqlService
         try {
             $this->tool->createArchive($this->database);
         } catch (ToolException $e) {
-            $msg = sprintf('Failed to create archive for schema %s of directory backup "%s".', $schema, $name);
+            $msg = sprintf('Failed to create archive for schema %s of database backup "%s".', $schema, $name);
 
             throw new DatabaseException($msg, 0, $e);
         }
     }
 
     /**
-     * Get MySQL dump command
+     * Get schema dump command
      *
      * @param string $schema
      * @return string
      */
-    private function getSchemaDumpCmd(string $schema): string
+    private function getSchemaDumpCommand(string $schema): string
     {
-        return $this->database->getType() === DatabaseService::TYPE_DOCKER ? $this->getDockerDumpCmd($schema) : $this->getHostDumpCmd($schema);
+        return $this->database->getType() === DatabaseService::TYPE_DOCKER ? $this->getDockerDumpCommand($schema) : $this->getHostDumpCommand($schema);
     }
 
     /**
@@ -261,7 +260,7 @@ class MySqlService
      * @param string $schema
      * @return string
      */
-    private function getDockerDumpCmd(string $schema): string
+    private function getDockerDumpCommand(string $schema): string
     {
         return sprintf(
             'docker exec %s sh -c "mysqldump%s%s %s" > %s',
@@ -279,7 +278,7 @@ class MySqlService
      * @param string $schema
      * @return string
      */
-    private function getHostDumpCmd(string $schema): string
+    private function getHostDumpCommand(string $schema): string
     {
         return sprintf(
             'mysqldump%s%s%s %s > %s',

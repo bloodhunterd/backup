@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Backup\Agent\Service;
 
+use Backup\Agent\Service\Database\MongoDbService;
 use Backup\Agent\Service\Database\MySqlService;
 use Backup\Exception\DatabaseException;
 use Backup\Agent\Model\DatabaseModel;
@@ -36,6 +37,12 @@ class DatabaseService
     public const TYPE_HOST = 'host';
 
     /**
+     * @var MongoDbService
+     * @Inject("Backup\Agent\Service\Database\MongoDbService")
+     */
+    private $mongoDbService;
+
+    /**
      * @var MySqlService
      * @Inject("Backup\Agent\Service\Database\MySqlService")
      */
@@ -55,8 +62,8 @@ class DatabaseService
                 // Todo: Implement PostgreSQL database service
                 throw new DatabaseException('PostgreSQL support not available, yet.');
             case self::SYSTEM_MONGODB:
-                // Todo: Implement MongoDB database service
-                throw new DatabaseException('MongoDB support not available, yet.');
+                $this->mongoDbService->backupDatabase($database);
+                break;
             case self::SYSTEM_MARIADB:
             case self::SYSTEM_MYSQL:
             default:
