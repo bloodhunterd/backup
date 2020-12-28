@@ -4,7 +4,7 @@
  * This file is part of the Backup project.
  * Visit project at https://github.com/bloodhunterd/backup
  *
- * Copyright © 2019 BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * Copyright © 2020 BloodhunterD <bloodhunterd@bloodhunterd.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,7 +34,7 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  *
  * @package Backup\Agent
  *
- * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author BloodhunterD
  */
 class Agent implements Backup
 {
@@ -233,7 +233,7 @@ class Agent implements Backup
         try {
             $this->tool->mountDirectory($directory->getSource(), $directory->getSource());
         } catch (PharException $e) {
-            $msg = sprintf('Failed to mount source directory for directory "%s"', $name);
+            $msg = sprintf('Failed to mount source directory for directory "%s".', $name);
 
             throw new DirectoryException($msg, 0, $e);
         }
@@ -242,18 +242,30 @@ class Agent implements Backup
 
         $cmdBefore = $directory->getCommandBefore();
         if ($cmdBefore) {
-            $this->tool->execute($cmdBefore);
+            try {
+                $this->tool->execute($cmdBefore);
+            } catch (ToolException $e) {
+                $msg = sprintf('Failed to execute command "%s".', 'BEFORE');
 
-            $this->logger->use('app')->info(sprintf('Command was executed: %s', 'BEFORE'));
+                throw new DirectoryException($msg, 0, $e);
+            }
+
+            $this->logger->use('app')->info(sprintf('Command "%s" was executed.', 'BEFORE'));
         }
 
         $this->tool->createArchive($directory);
 
         $cmdAfter = $directory->getCommandAfter();
         if ($cmdAfter) {
-            $this->tool->execute($cmdAfter);
+            try {
+                $this->tool->execute($cmdAfter);
+            } catch (ToolException $e) {
+                $msg = sprintf('Failed to execute command "%s".', 'AFTER');
 
-            $this->logger->use('app')->info(sprintf('Command was executed: %s', 'AFTER'));
+                throw new DirectoryException($msg, 0, $e);
+            }
+
+            $this->logger->use('app')->info(sprintf('Command "%s" was executed.', 'AFTER'));
         }
     }
 }
