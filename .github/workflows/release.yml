@@ -27,10 +27,6 @@ jobs:
       - name: Install the dependencies
         run: composer install --prefer-dist --no-dev --no-progress
 
-      - name: Compile the Phar application
-        run: |
-          php -d phar.readonly=0 ./build/compile.php
-
       - name: Log into and push the image to Docker Hub registry
         uses: docker/build-push-action@v1
         env:
@@ -54,17 +50,6 @@ jobs:
             See [changelog](${{ env.SERVER_URL }}/${{ env.REPOSITORY }}/blob/master/CHANGELOG.md#${{ env.VERSION }}).
           draft: false
           prerelease: false
-
-      - name: Add the Phar application to the release
-        if: env.VERSION != 'master'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/backup.phar
-          asset_name: Backup-${{ env.VERSION }}.phar
-          asset_content_type: application/zip
 
       - name: Add the Agent distribution configuration to the release
         if: env.VERSION != 'master'

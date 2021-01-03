@@ -42,12 +42,12 @@ Backup is an application to organize file and database backups. It supports comp
 
 ## Deployment
 
-Download the Phar&#178; application and place it somewhere on your server. Download the distributed agent&#179; and manager&#8308; configuration files and place it somewhere on your server. Adjust the configuration file for your needs and add an entry into the Cron table to execute this application periodically.
+Download the project and place it somewhere on your server. Download the distributed agent&#178; and manager&#179; configuration files and place it somewhere on your server. Adjust the configuration file for your needs and add an entry into the Cron table to execute this application periodically.
 
 **Note:** A good start is to enable the debugging mode in configuration and run the backup manually to ensure everything works fine.
 
 ```bash
-0 4 * * * php /srv/backup.phar ./configuration.json >> /var/log/backup.log
+0 4 * * * php /srv/cli.php ./config.json >> /var/log/backup.log
 ```
 *In this example the backup runs every night at 4am.*
 
@@ -82,4 +82,4 @@ This project is licensed under the MIT - see [LICENSE.md](https://github.com/blo
 ## Footnotes
 
 &#185; *The JSON extension is already included in PHP 8.0.*  
-&#178;,&#179;,&#8308; *See the asset section for the respective release.*
+&#178;,&#179; *See the asset section under the respective release.*

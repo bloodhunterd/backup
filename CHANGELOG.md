@@ -2,8 +2,10 @@
 
 All notable changes will be documented in this file.
 
-## Master - 28.12.2020
+## Master - 03.01.2021
 
+* Added execution by CLI
+* Phar support canceled
 * Added support for MongoDB (ref. issue #9)
 * Updated PHP version to 8.0 on Docker image
 * Added missing BZIP2 package (Docker)

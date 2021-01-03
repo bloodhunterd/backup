@@ -23,7 +23,7 @@ Download the agent or manager configuration from the asset section of the respec
 ### Docker Compose
 
 ```yaml
-version: '3'
+version: '2.4'
 
 services:
   backup-tool:
