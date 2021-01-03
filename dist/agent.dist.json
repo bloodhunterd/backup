@@ -2,6 +2,7 @@
   "mode": "agent",
   "timezone": "Europe/Berlin",
   "language": "de_DE.utf8",
+  "compression": "gzip",
   "report": {
     "sender": {
       "address": "noreply@example.com",

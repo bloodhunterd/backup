@@ -14,8 +14,11 @@
       "@type": "string"
     },
     "language": {
+      "@type": "string"
+    },
+    "compression": {
       "@type": "string",
-      "@required": true
+      "@allowed": "gzip|bzip2"
     },
     "report": {
       "@type": "object",
