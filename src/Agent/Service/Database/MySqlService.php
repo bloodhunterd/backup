@@ -229,7 +229,7 @@ class MySqlService
             throw new DatabaseException($msg, 0, $e);
         }
 
-        $this->database->setArchive($this->tool::sanitize($name) . '.' . $schema);
+        $this->database->setArchive(Tool::sanitize($name) . '_' . $schema . '.sql.' . $this->tool->getArchiveSuffix());
 
         try {
             $this->tool->createArchive($this->database);

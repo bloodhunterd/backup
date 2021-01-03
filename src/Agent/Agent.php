@@ -22,7 +22,6 @@ use Backup\Agent\Service\DatabaseService;
 use Backup\Logger;
 use Backup\Report\Report;
 use Backup\Tool;
-use PharException;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
 
@@ -227,15 +226,7 @@ class Agent implements Backup
             throw new DirectoryException($msg, 0, $e);
         }
 
-        try {
-            $this->tool->mountDirectory($directory->getSource(), $directory->getSource());
-        } catch (PharException $e) {
-            $msg = sprintf('Failed to mount source directory for directory "%s".', $name);
-
-            throw new DirectoryException($msg, 0, $e);
-        }
-
-        $directory->setArchive(Tool::sanitize($name));
+        $directory->setArchive(Tool::sanitize($name) . '.tar.' . $this->tool->getArchiveSuffix());
 
         $cmdBefore = $directory->getCommandBefore();
         if ($cmdBefore) {

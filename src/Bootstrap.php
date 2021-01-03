@@ -38,15 +38,22 @@ class Bootstrap
     private $container;
 
     /**
+     * @var string
+     */
+    private $configPath;
+
+    /**
      * Bootstrap constructor
      */
-    public function __construct()
+    public function __construct(string $configPath)
     {
         # Initialize dependency injection
         $this->container = new Container();
         $this->container->registerNamespace([
             'Backup'
         ]);
+
+        $this->configPath = $configPath;
     }
 
     /**
@@ -79,9 +86,9 @@ class Bootstrap
 
         /** @var Configuration $config */
         $config = $this->container->get(Configuration::class);
+        $config->setPath($this->configPath);
 
         try {
-            $config->mount();
             $config->load();
         } catch (ConfigurationException $e) {
             $logger->use('app')->error($e->getMessage());
@@ -133,8 +140,6 @@ class Bootstrap
 
                 throw new BackupException($msg);
         }
-
-        $tool->mountDirectory('/backup', $config->getTargetDirectory());
 
         $logger->use('app')->info('Backup initialized.');
 

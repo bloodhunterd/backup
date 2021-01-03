@@ -14,9 +14,6 @@ namespace Backup;
 use Backup\Exception\ConfigurationException;
 use Backup\Report\Model\ReportRecipientModel;
 use Backup\Report\Model\ReportSenderModel;
-use Phar;
-use PharException;
-use TypeError;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
 use Vection\Component\Validator\Schema\Schema;
@@ -36,6 +33,11 @@ class Configuration
     use AnnotationInjection;
 
     /**
+     * @var string
+     */
+    private $path;
+
+    /**
      * @var mixed[]
      */
     private $settings;
@@ -47,21 +49,13 @@ class Configuration
     private $logger;
 
     /**
-     * Mount the configuration file
+     * Set the path to the configuration file
      *
-     * @throws ConfigurationException
+     * @param string $path
      */
-    public function mount(): void
+    public function setPath(string $path): void
     {
-        try {
-            Phar::mount('config.json', $_SERVER['argv'][1]);
-        } catch (PharException | TypeError $e) {
-            $msg = 'The configuration file is missing. Please check %s.';
-
-            throw new ConfigurationException(sprintf($msg, $e->getMessage()));
-        }
-
-        $this->logger->use('app')->info('Configuration mounted.');
+        $this->path = $path;
     }
 
     /**
@@ -73,9 +67,9 @@ class Configuration
     {
         $validator = new SchemaValidator(new Schema(RES_DIR . DIRECTORY_SEPARATOR . 'config.schema.json'));
 
-        $json = file_get_contents(ROOT_DIR . DIRECTORY_SEPARATOR . 'config.json');
+        $json = file_get_contents($this->path);
         if ($json === false) {
-            throw new ConfigurationException('Failed to load the configuration.');
+            throw new ConfigurationException(sprintf('Failed to load the configuration from "%s".', $this->path));
         }
 
         try {
@@ -98,7 +92,7 @@ class Configuration
      */
     public function getTimezone(): string
     {
-        return $this->settings['timezone'];
+        return $this->settings['timezone'] ?? '';
     }
 
     /**
@@ -108,7 +102,17 @@ class Configuration
      */
     public function getLanguage(): string
     {
-        return $this->settings['language'];
+        return $this->settings['language'] ?? '';
+    }
+
+    /**
+     * Get the compression method
+     *
+     * @return string
+     */
+    public function getCompression(): string
+    {
+        return $this->settings['compression'] ?? '';
     }
 
     /**

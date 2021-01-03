@@ -128,17 +128,17 @@ class DirectoryModel implements Compressible
     }
 
     /**
-     * Set archive
+     * Set the archive file name
      *
      * @param string $name
      */
     public function setArchive(string $name): void
     {
-        $this->archive = $name . '.tar.bz2';
+        $this->archive = $name;
     }
 
     /**
-     * Get archive
+     * Get the archive file name
      *
      * @return string
      */

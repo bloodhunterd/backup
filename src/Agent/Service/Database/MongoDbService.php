@@ -63,7 +63,7 @@ class MongoDbService
             throw new DatabaseException($msg, 0, $e);
         }
 
-        $database->setArchive($this->tool::sanitize($name));
+        $database->setArchive($this->tool::sanitize($name) . '.mongo.gz');
 
         $cmd = 'mongodump --gzip --archive=-';
         if ($isDocker) {

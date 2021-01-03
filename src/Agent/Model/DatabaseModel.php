@@ -172,17 +172,17 @@ class DatabaseModel implements Compressible
     }
 
     /**
-     * Set the archive
+     * Set the archive file name
      *
      * @param string $name
      */
     public function setArchive(string $name): void
     {
-        $this->archive = $name . '.sql.bz2';
+        $this->archive = $name;
     }
 
     /**
-     * Get the archive
+     * Get the archive file name
      *
      * @return string
      */

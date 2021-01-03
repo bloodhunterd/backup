@@ -13,7 +13,6 @@ namespace Backup;
 
 use Backup\Exception\ToolException;
 use Backup\Interfaces\Compressible;
-use Phar;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
 
@@ -105,19 +104,6 @@ class Tool
     }
 
     /**
-     * Mount a directory
-     *
-     * @param string $internalPath
-     * @param string $externalPath
-     */
-    public function mountDirectory(string $internalPath, string $externalPath): void
-    {
-        Phar::mount($internalPath, $externalPath);
-
-        $this->logger->use('app')->info(sprintf('Directory "%s" is mounted as "%s".', $externalPath, $internalPath));
-    }
-
-    /**
      * Create a directory
      *
      * @param string $path
@@ -144,11 +130,17 @@ class Tool
      */
     public function createArchive(Compressible $compressible): void
     {
-        $target = $compressible->getTarget() . DIRECTORY_SEPARATOR . $compressible->getArchive();
+        $target = $compressible->getArchive();
 
         $cmd = sprintf(
-            'tar -cjf %s %s',
-            escapeshellarg($this->config->getTargetDirectory() . $target),
+            'tar -c%sf %s %s',
+            $this->getArchiveInfo()['parameter'],
+            escapeshellarg(
+                $this->config->getTargetDirectory() .
+                $compressible->getTarget() .
+                DIRECTORY_SEPARATOR .
+                $target
+            ),
             escapeshellarg($compressible->getSource())
         );
 
@@ -219,6 +211,41 @@ class Tool
     public function getDuration(): int
     {
         return (int) (hrtime(true) - $this->durationStart);
+    }
+
+    /**
+     * Get the archive info
+     *
+     * @return string[]
+     */
+    private function getArchiveInfo(): array
+    {
+        switch ($this->config->getCompression()) {
+            case 'bzip2':
+                $info = [
+                    'parameter' => 'j',
+                    'suffix' => 'bz2'
+                ];
+                break;
+            case 'gzip':
+            default:
+                $info = [
+                    'parameter' => 'z',
+                    'suffix' => 'gz'
+                ];
+        }
+
+        return $info;
+    }
+
+    /**
+     * Get the archive suffix
+     *
+     * @return string
+     */
+    public function getArchiveSuffix(): string
+    {
+        return $this->getArchiveInfo()['suffix'];
     }
 
     /**
