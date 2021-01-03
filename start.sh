@@ -11,7 +11,7 @@ echo "${TZ}" > /etc/timezone
 # Cron
 # ===================================================
 
-echo "${CRON_MINUTE} ${CRON_HOUR} * * * php /srv/backup.phar /srv/backup.json > /dev/null 2>&1" > /etc/cron.d/backup
+echo "${CRON_MINUTE} ${CRON_HOUR} * * * php /srv/cli.php -c /srv/backup.json > /dev/null 2>&1" > /etc/cron.d/backup
 
 crontab /etc/cron.d/backup
 

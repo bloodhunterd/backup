@@ -4,7 +4,7 @@ FROM debian:stable-slim
 # Environment vars
 # ===================================================
 
-ARG PHP_VERSION=8.0
+ARG PHP_VERSION=7.4
 
 ENV TZ 'Europe/Berlin'
 
@@ -77,8 +77,16 @@ RUN mkdir /backup
 
 RUN touch /var/log/backup.log
 
-COPY ./build/backup.phar /srv/backup.phar
-
+COPY ./config /srv/config
+COPY ./res /srv/res
+COPY ./src /srv/src
+COPY ./vendor /srv/vendor
+COPY ./cli.php /srv
+COPY ./CHANGELOG.md /srv
+COPY ./composer.json /srv
+COPY ./composer.lock /srv
+COPY ./LICENSE /srv
+COPY ./README.md /srv
 COPY ./start.sh /
 
 # ===================================================
