@@ -1,9 +1,0 @@
-language: php
-install:
-  - travis_retry composer update --prefer-dist
-jobs:
-  include:
-    - script: phpunit
-      php: 7.3
-    - script: phpunit
-      php: 7.4

@@ -2,6 +2,7 @@
     "name": "bloodhunterd/backup",
     "description": "Backup",
     "require": {
+        "php": "^7.4 || ^8.0",
         "ext-bz2": "*",
         "ext-intl": "*",
         "ext-json": "*",
@@ -12,7 +13,7 @@
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
-        "phpunit/phpunit": "^9.3",
+        "phpunit/phpunit": "^9.5",
         "phpstan/phpstan": "^0.12"
     },
     "license": "MIT",
@@ -51,5 +52,9 @@
         "php",
         "rsync",
         "ssh"
-    ]
+    ],
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "phpstan": "vendor/bin/phpstan analyse"
+    }
 }
