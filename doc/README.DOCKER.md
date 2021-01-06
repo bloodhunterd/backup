@@ -26,19 +26,15 @@ Download the agent or manager configuration from the asset section of the respec
 version: '2.4'
 
 services:
-  backup-tool:
+  backup:
     image: bloodhunterd/backup
     environment:
       SMTP_HOST: localhost
       SMTP_PORT: 25
-      SMTP_DOMAIN: localhost
+      SMTP_DOMAIN: example.com
       SMTP_FROM: noreply@example.com
-      SMTP_AUTH: off
       SMTP_USER: root
       SMTP_PASSWORD: +V3ryS3cr3tP4ssw0rd#
-      SMTP_TLS: on
-      SMTP_STARTTLS: off
-      SMTP_CERTCHECK: on
     restart: unless-stopped
     volumes:
       - ./backup/:/backup/

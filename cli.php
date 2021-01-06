@@ -1,5 +1,4 @@
 <?php
-
 /*
  * @package    Backup
  * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>

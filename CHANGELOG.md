@@ -2,8 +2,9 @@
 
 All notable changes will be documented in this file.
 
-## Master - 03.01.2021
+## Master - 04.01.2021
 
+* Canceled support for PHP 7.3
 * Added execution by CLI
 * Phar support canceled
 * Added support for MongoDB (ref. issue #9)

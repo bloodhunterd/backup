@@ -1,4 +1,4 @@
-name: Backup
+name: Release
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
-  phar:
+  release:
     name: Release
 
     runs-on: ubuntu-latest
@@ -23,6 +23,11 @@ jobs:
           echo "SERVER_URL=$GITHUB_SERVER_URL" >> $GITHUB_ENV
           echo "REPOSITORY=$GITHUB_REPOSITORY" >> $GITHUB_ENV
           echo "VERSION=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
 
       - name: Install the dependencies
         run: composer install --prefer-dist --no-dev --no-progress

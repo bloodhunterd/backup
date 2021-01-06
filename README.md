@@ -1,5 +1,6 @@
 [![Release](https://img.shields.io/github/v/release/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/releases)
-[![Tests](https://img.shields.io/travis/bloodhunterd/backup?label=Tests&style=for-the-badge)](https://travis-ci.com/github/bloodhunterd/backup)
+[![Build](https://img.shields.io/github/workflow/status/bloodhunterd/backup/PHP?style=for-the-badge)](https://github.com/bloodhunterd/backup/actions?query=workflow%3APHP)
+![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-blueviolet?style=for-the-badge)
 [![License](https://img.shields.io/github/license/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/LICENSE)
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/bloodhunterd)
@@ -11,7 +12,7 @@ Backup is an application to organize file and database backups. It supports comp
 ## Features
 
 * Simple configuration
-* Strong compression (***bzip2***)
+* Strong compressions
 * Supports [MariaDB](https://mariadb.org/), [MongoDB](https://www.mongodb.com/) and [MySQL](https://www.mysql.com/)
 * Supports ***dockerized*** databases
 * Execute commands before and after
@@ -23,12 +24,12 @@ Backup is an application to organize file and database backups. It supports comp
 
 ### Agent
 
-* Linux distribution
-* [PHP](https://www.php.net/) >= **7.3**
-  * BZ2
+* Linux, Windows or MacOS
+* [PHP](https://www.php.net/) **^7.4**
+  * BZ2 *(optional)*
   * CLI
   * INTL
-  * JSON&#185;
+  * JSON
 
 ### Manager
 
@@ -42,7 +43,7 @@ Backup is an application to organize file and database backups. It supports comp
 
 ## Deployment
 
-Download the project and place it somewhere on your server. Download the distributed agent&#178; and manager&#179; configuration files and place it somewhere on your server. Adjust the configuration file for your needs and add an entry into the Cron table to execute this application periodically.
+Download the project and place it somewhere on your server. Download the distributed agent&#185; and manager&#178; configuration files and place it somewhere on your server. Adjust the configuration file for your needs and add an entry into the Cron table to execute this application periodically.
 
 **Note:** A good start is to enable the debugging mode in configuration and run the backup manually to ensure everything works fine.
 
@@ -81,5 +82,4 @@ This project is licensed under the MIT - see [LICENSE.md](https://github.com/blo
 
 ## Footnotes
 
-&#185; *The JSON extension is already included in PHP 8.0.*  
-&#178;,&#179; *See the asset section under the respective release.*
+&#185;,&#178; *See the asset section under the respective release.*
