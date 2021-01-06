@@ -1,10 +1,9 @@
 <?php
-
 /*
  * @package    Backup
  * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * @link       https://github.com/bloodhunterd/backup
+ * @copyright  © 2021 BloodhunterD
  */
 
 declare(strict_types=1);
@@ -12,6 +11,7 @@ declare(strict_types=1);
 namespace Backup\Agent\Service\Database;
 
 use Backup\Agent\Service\DatabaseService;
+use Backup\Configuration;
 use Backup\Exception\DatabaseException;
 use Backup\Exception\ToolException;
 use Backup\Logger;
@@ -36,6 +36,12 @@ class MongoDbService
      * @Inject("Backup\Logger")
      */
     private $logger;
+
+    /**
+     * @var Configuration
+     * @Inject("Backup\Configuration")
+     */
+    private $config;
 
     /**
      * @var Tool
@@ -69,7 +75,7 @@ class MongoDbService
         if ($isDocker) {
             $cmd = sprintf('docker exec %s sh -c "%s"', $database->getDockerContainer(), $cmd);
         }
-        $cmd .= sprintf(' > %s', $database->getTarget() . DIRECTORY_SEPARATOR . $database->getArchive());
+        $cmd .= sprintf(' > %s', $this->config->getTargetDirectory() . $database->getTarget() . DIRECTORY_SEPARATOR . $database->getArchive());
 
         try {
             $this->tool->execute($cmd);
