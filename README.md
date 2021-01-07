@@ -1,6 +1,7 @@
 [![Release](https://img.shields.io/github/v/release/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/releases)
-[![Build](https://img.shields.io/github/workflow/status/bloodhunterd/backup/PHP?style=for-the-badge)](https://github.com/bloodhunterd/backup/actions?query=workflow%3APHP)
 ![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-blueviolet?style=for-the-badge)
+[![Tests](https://img.shields.io/github/workflow/status/bloodhunterd/backup/PHP?style=for-the-badge&label=Tests)](https://github.com/bloodhunterd/backup/actions?query=workflow%3APHP)
+[![Docker](https://img.shields.io/github/workflow/status/bloodhunterd/backup/PHP?style=for-the-badge&label=Docker%20Build)](https://github.com/bloodhunterd/backup/actions?query=workflow%3ADocker)
 [![License](https://img.shields.io/github/license/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/LICENSE)
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/bloodhunterd)

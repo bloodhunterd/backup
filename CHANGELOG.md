@@ -2,7 +2,7 @@
 
 All notable changes will be documented in this file.
 
-## Master - 04.01.2021
+## <a name="v1-0-0-dev"></a> [1.0.0-dev](https://github.com/bloodhunterd/backup/releases/tag/1.0.0-dev) - 07.01.2021
 
 * Canceled support for PHP 7.3
 * Added execution by CLI
