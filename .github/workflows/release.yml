@@ -2,11 +2,10 @@ name: Release
 
 on:
   push:
-    branches:
-      - master
-
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-dev'
+      - '[0-9]+.[0-9]+.[0-9]+-beta'
 
 jobs:
   release:
@@ -15,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
+      - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Prepare the environment variables
+      - name: Prepare environment variables
         run: |
           echo "SERVER_URL=$GITHUB_SERVER_URL" >> $GITHUB_ENV
           echo "REPOSITORY=$GITHUB_REPOSITORY" >> $GITHUB_ENV
@@ -29,21 +28,15 @@ jobs:
         with:
           php-version: 7.4
 
-      - name: Install the dependencies
+      - name: Install dependencies
         run: composer install --prefer-dist --no-dev --no-progress
 
-      - name: Log into and push the image to Docker Hub registry
-        uses: docker/build-push-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          repository: ${{ env.REPOSITORY }}
-          tag_with_ref: true
+      - name: Create application
+        id: create_application
+        run: |
+          tar czf application config res src vendor cli.php composer.json composer.lock LICENSE README.md
 
-      - name: Create the release
-        if: env.VERSION != 'master'
+      - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -56,35 +49,32 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Add the Agent distribution configuration to the release
-        if: env.VERSION != 'master'
+      - name: Add application
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/agent.dist.json
-          asset_name: Backup-${{ env.VERSION }}-Agent.json
+          asset_path: application
+          asset_name: Backup_${{ env.VERSION }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Add Agent config
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/agent.dist.json
+          asset_name: Backup_${{ env.VERSION }}_Agent_Config.json
           asset_content_type: application/json
 
-      - name: Add the Docker Compose distribution configuration to the release
-        if: env.VERSION != 'master'
+      - name: Add Manager config
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/docker-compose.dist.yml
-          asset_name: Backup-${{ env.VERSION }}-Docker-Compose.yml
-          asset_content_type: application/yaml
-
-      - name: Add the Manager distribution configuration to the release
-        if: env.VERSION != 'master'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/manager.dist.json
-          asset_name: Backup-${{ env.VERSION }}-Manager.json
+          asset_path: dist/manager.dist.json
+          asset_name: Backup_${{ env.VERSION }}_Manager_Config.json
           asset_content_type: application/json
