@@ -47,7 +47,7 @@ jobs:
           body: |
             See [changelog](${{ env.SERVER_URL }}/${{ env.REPOSITORY }}/blob/master/CHANGELOG.md#${{ env.VERSION }}).
           draft: false
-          prerelease: false
+          prerelease: ${{ contains(env.VERSION, '-beta') || contains(env.VERSION, '-dev') }}
 
       - name: Add application
         uses: actions/upload-release-asset@v1
@@ -56,7 +56,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: application
-          asset_name: Backup_${{ env.VERSION }}.tar.gz
+          asset_name: Backup.tar.gz
           asset_content_type: application/gzip
 
       - name: Add Agent config
@@ -66,7 +66,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/agent.dist.json
-          asset_name: Backup_${{ env.VERSION }}_Agent_Config.json
+          asset_name: Backup-Config-Agent.json
           asset_content_type: application/json
 
       - name: Add Manager config
@@ -76,5 +76,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/manager.dist.json
-          asset_name: Backup_${{ env.VERSION }}_Manager_Config.json
+          asset_name: Backup-Config-Manager.json
           asset_content_type: application/json
