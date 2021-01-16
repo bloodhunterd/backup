@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Backup\Agent;
 
+use Backup\Agent\Service\Database\MongoDbService;
+use Backup\Agent\Service\Database\MySqlService;
+use Backup\Agent\Service\Database\PostgresService;
 use Backup\Configuration;
 use Backup\Exception\DatabaseException;
 use Backup\Exception\DirectoryException;
@@ -30,7 +33,7 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  *
  * @package Backup\Agent
  *
- * @author BloodhunterD
+ * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Agent implements Backup
 {
@@ -40,31 +43,43 @@ class Agent implements Backup
      * @var Configuration
      * @Inject("Backup\Configuration")
      */
-    private $config;
+    private Configuration $config;
 
     /**
      * @var Logger
      * @Inject("Backup\Logger")
      */
-    private $logger;
+    private Logger $logger;
 
     /**
      * @var Tool
      * @Inject("Backup\Tool")
      */
-    private $tool;
+    private Tool $tool;
 
     /**
      * @var Report
      * @Inject("Backup\Report\Report")
      */
-    private $report;
+    private Report $report;
 
     /**
-     * @var DatabaseService
-     * @Inject("Backup\Agent\Service\DatabaseService")
+     * @var MongoDbService
+     * @Inject("Backup\Agent\Service\Database\MongoDbService")
      */
-    private $databaseService;
+    private MongoDbService $mongoDbService;
+
+    /**
+     * @var MySqlService
+     * @Inject("Backup\Agent\Service\Database\MySqlService")
+     */
+    private MySqlService $mySqlService;
+
+    /**
+     * @var PostgresService
+     * @Inject("Backup\Agent\Service\Database\PostgresService")
+     */
+    private PostgresService $postgresService;
 
     /**
      * @inheritDoc
@@ -161,7 +176,18 @@ class Agent implements Backup
             try {
                 $this->tool->setDurationStart();
 
-                $this->databaseService->backupDatabase($databaseModel);
+                switch ($databaseModel->getSystem()) {
+                    case DatabaseService::SYSTEM_POSTGRES:
+                        $this->postgresService->backupDatabase($databaseModel);
+                        break;
+                    case DatabaseService::SYSTEM_MONGODB:
+                        $this->mongoDbService->backupDatabase($databaseModel);
+                        break;
+                    case DatabaseService::SYSTEM_MARIADB:
+                    case DatabaseService::SYSTEM_MYSQL:
+                    default:
+                        $this->mySqlService->backupDatabase($databaseModel);
+                }
 
                 $duration = $this->tool->getDuration();
             } catch (DatabaseException $e) {

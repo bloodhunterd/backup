@@ -10,10 +10,9 @@ declare(strict_types=1);
 
 namespace Backup\Agent\Service;
 
-use Backup\Agent\Service\Database\MongoDbService;
-use Backup\Agent\Service\Database\MySqlService;
-use Backup\Exception\DatabaseException;
 use Backup\Agent\Model\DatabaseModel;
+use Backup\Logger;
+use Backup\Tool;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
 
@@ -22,51 +21,92 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  *
  * @package Backup\Agent\Service
  *
- * @author BloodhunterD
+ * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
-class DatabaseService
+abstract class DatabaseService
 {
     use AnnotationInjection;
+
+    protected const DEFAULT_HOSTS = ['localhost', '127.0.0.1'];
 
     public const SYSTEM_MARIADB = 'mariadb';
     public const SYSTEM_MONGODB = 'mongodb';
     public const SYSTEM_MYSQL = 'mysql';
-    public const SYSTEM_POSTGRESQL = 'postgresql';
+    public const SYSTEM_POSTGRES = 'postgres';
     public const TYPE_DOCKER = 'docker';
     public const TYPE_HOST = 'host';
 
     /**
-     * @var MongoDbService
-     * @Inject("Backup\Agent\Service\Database\MongoDbService")
+     * @var DatabaseModel
      */
-    private $mongoDbService;
+    protected DatabaseModel $database;
 
     /**
-     * @var MySqlService
-     * @Inject("Backup\Agent\Service\Database\MySqlService")
+     * @var Logger
+     * @Inject("Backup\Logger")
      */
-    private $mySqlService;
+    protected Logger $logger;
 
     /**
-     * Backup a database
-     *
-     * @param DatabaseModel $database
-     *
-     * @throws DatabaseException
+     * @var Tool
+     * @Inject("Backup\Tool")
      */
-    public function backupDatabase(DatabaseModel $database): void
+    protected Tool $tool;
+
+    /**
+     * Prepare Docker command
+     *
+     * @param string $command
+     * @return string
+     */
+    protected function prepareDockerCommand(string $command): string
     {
-        switch ($database->getSystem()) {
-            case self::SYSTEM_POSTGRESQL:
-                // Todo: Implement PostgreSQL database service
-                throw new DatabaseException('PostgreSQL support not available, yet.');
-            case self::SYSTEM_MONGODB:
-                $this->mongoDbService->backupDatabase($database);
-                break;
-            case self::SYSTEM_MARIADB:
-            case self::SYSTEM_MYSQL:
-            default:
-                $this->mySqlService->backupDatabase($database);
+        $cmd = 'docker exec %s sh -c "%s"';
+
+        return sprintf($cmd, $this->database->getDockerContainer(), $command);
+    }
+
+    /**
+     * Prepare host
+     *
+     * @return string
+     */
+    protected function prepareHost(): string
+    {
+        $host = $this->database->getHost();
+
+        if (!$host) {
+            $host = self::DEFAULT_HOSTS[0];
+        } else if (!in_array($host, self::DEFAULT_HOSTS)) {
+            $host = escapeshellarg($host);
         }
+
+        return sprintf(' -h %s', $host);
+    }
+
+    /**
+     * Prepare user
+     *
+     * @return string
+     */
+    protected function prepareUser(): string
+    {
+        // Use constants of child class
+        $class = static::class;
+
+        $user = $this->database->getUser();
+
+        if (!$user) {
+            $user = $class::DEFAULT_USER;
+        } else if (
+            $this->database->getType() === $class::TYPE_DOCKER &&
+            strncasecmp($user, $class::USER, strlen($class::USER)) === 0
+        ) {
+            $user = $class::ENV . $class::USER;
+        } else {
+            $user = escapeshellarg($user);
+        }
+
+        return $user;
     }
 }

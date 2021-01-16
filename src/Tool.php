@@ -43,13 +43,13 @@ class Tool
      * @var Configuration
      * @Inject("Backup\Configuration")
      */
-    private $config;
+    private Configuration $config;
 
     /**
      * @var Logger
      * @Inject("Backup\Logger")
      */
-    private $logger;
+    private Logger $logger;
 
     /**
      * Set the timezone
@@ -180,7 +180,8 @@ class Tool
     {
         $this->logger->use('app')->debug(sprintf('Execute command: %s', $command));
 
-        exec($command, $output, $return);
+        // Replace tabs and line endings with a single whitespace
+        exec(preg_replace('/\s+/', ' ', $command), $output, $return);
 
         foreach ($output as $line) {
             $this->logger->use('console')->debug($line);

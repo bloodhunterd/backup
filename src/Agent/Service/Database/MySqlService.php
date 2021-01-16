@@ -1,10 +1,9 @@
 <?php
-
 /*
  * @package    Backup
  * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * @link       https://github.com/bloodhunterd/backup
+ * @copyright  © 2021 BloodhunterD
  */
 
 declare(strict_types=1);
@@ -14,11 +13,8 @@ namespace Backup\Agent\Service\Database;
 use Backup\Agent\Service\DatabaseService;
 use Backup\Exception\DatabaseException;
 use Backup\Exception\ToolException;
-use Backup\Logger;
 use Backup\Agent\Model\DatabaseModel;
 use Backup\Tool;
-use Vection\Component\DI\Annotations\Inject;
-use Vection\Component\DI\Traits\AnnotationInjection;
 use function in_array;
 
 /**
@@ -26,33 +22,17 @@ use function in_array;
  *
  * @package Backup\Agent\Service\Database
  *
- * @author BloodhunterD
+ * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
-class MySqlService
+class MySqlService extends DatabaseService
 {
-    use AnnotationInjection;
+    protected const DEFAULT_USER = 'root';
+    protected const ENV = '\$';
+    protected const USER = 'MYSQL_USER';
 
-    private const ENV = '\$';
-    private const PASSWORDS = ['MYSQL_ROOT_PASSWORD', 'MYSQL_PASSWORD'];
-    private const NO_PASSWORD = 'MYSQL_ALLOW_EMPTY_PASSWORD';
     private const EXCLUDED_SCHEMATA = ['information_schema', 'mysql', 'performance_schema', 'sys'];
-
-    /**
-     * @var DatabaseModel
-     */
-    private $database;
-
-    /**
-     * @var Logger
-     * @Inject("Backup\Logger")
-     */
-    private $logger;
-
-    /**
-     * @var Tool
-     * @Inject("Backup\Tool")
-     */
-    private $tool;
+    private const NO_PASSWORD = 'MYSQL_ALLOW_EMPTY_PASSWORD';
+    private const PASSWORDS = ['MYSQL_ROOT_PASSWORD', 'MYSQL_PASSWORD'];
 
     /**
      * Backup a database
@@ -74,9 +54,9 @@ class MySqlService
         }
 
         if ($this->database->getType() === DatabaseService::TYPE_DOCKER) {
-            $cmd = $this->getDockerCommand($this->getSchemataQuery());
+            $cmd = $this->prepareDockerCommand($this->getCommand($this->getSchemataQuery()));
         } else {
-            $cmd = $this->getHostCommand($this->getSchemataQuery());
+            $cmd = $this->getCommand($this->getSchemataQuery());
         }
 
         # Get all available database schemata
@@ -102,66 +82,16 @@ class MySqlService
     }
 
     /**
-     * Prepare host command
+     * Prepare command
      *
      * @param string $query
      * @return string
      */
-    private function getHostCommand(string $query): string
+    private function getCommand(string $query): string
     {
         $cmd = 'mysql%s%s%s --skip-column-names -e \'%s;\'';
 
-        return sprintf($cmd, $this->prepareHost(), $this->prepareUser(), $this->preparePassword(), $query);
-    }
-
-    /**
-     * Prepare Docker command
-     *
-     * @param string $query
-     * @return string
-     */
-    private function getDockerCommand(string $query): string
-    {
-        $cmd = 'docker exec %s sh -c "mysql%s%s --skip-column-names -e \'%s;\'"';
-
-        return sprintf(
-            $cmd,
-            $this->database->getDockerContainer(),
-            $this->prepareUser(),
-            $this->preparePassword(),
-            $query
-        );
-    }
-
-    /**
-     * Prepare host
-     *
-     * @return string
-     */
-    private function prepareHost(): string
-    {
-        $host = $this->database->getHost();
-
-        return $host ? sprintf(' -h%s', escapeshellarg($host)) : '';
-    }
-
-    /**
-     * Prepare user
-     *
-     * @return string
-     */
-    private function prepareUser(): string
-    {
-        $user = $this->database->getUser();
-
-        # Replace Docker Compose environment vars
-        if ($this->database->getType() === DatabaseService::TYPE_DOCKER && strncasecmp($user, 'MYSQL_USER', 10) === 0) {
-            $user = self::ENV . $user;
-        } else {
-            $user = escapeshellarg($user);
-        }
-
-        return $user ? sprintf(' -u%s', $user) : '';
+        return sprintf($cmd, $this->prepareHost(), $this->getUser(), $this->preparePassword(), $query);
     }
 
     /**
@@ -196,17 +126,16 @@ class MySqlService
      */
     private function getSchemataQuery(): string
     {
-        $query = 'SELECT
-                    GROUP_CONCAT(schema_name SEPARATOR \" \")
-                  FROM
-                    information_schema.schemata
-                  WHERE
-                    schema_name NOT IN (\"%s\")
-                  ';
+        $query = <<<sql
+            SELECT
+                GROUP_CONCAT(schema_name SEPARATOR %s)
+            FROM
+                information_schema.schemata
+            WHERE
+                schema_name NOT IN (%s)
+        sql;
 
-        $query = sprintf($query, implode('\",\"', self::EXCLUDED_SCHEMATA));
-
-        return $query;
+        return sprintf($query, '\" \"', '\"' . implode('\",\"', self::EXCLUDED_SCHEMATA) . '\"');
     }
 
     /**
@@ -222,7 +151,21 @@ class MySqlService
         $this->database->setSource($this->tool::sanitize($name) . '.' . $schema . '.sql');
 
         try {
-            $this->tool->execute($this->getSchemaDumpCommand($schema));
+            $cmd = sprintf(
+                'mysqldump%s%s%s %s',
+                $this->prepareHost(),
+                $this->getUser(),
+                $this->preparePassword(),
+                escapeshellarg($schema)
+            );
+
+            $cmd = $this->database->getType() === DatabaseService::TYPE_DOCKER ? $this->prepareDockerCommand($cmd) : $cmd;
+            $cmd .= sprintf(
+                ' > %s',
+                escapeshellarg($this->database->getSource())
+            );
+
+            $this->tool->execute($cmd);
         } catch (ToolException $e) {
             $msg = sprintf('Failed to create dump for schema "%s" of database backup "%s".', $schema, $name);
 
@@ -231,59 +174,16 @@ class MySqlService
 
         $this->database->setArchive(Tool::sanitize($name) . '_' . $schema . '.sql.' . $this->tool->getArchiveSuffix());
 
-        try {
-            $this->tool->createArchive($this->database);
-        } catch (ToolException $e) {
-            $msg = sprintf('Failed to create archive for schema %s of database backup "%s".', $schema, $name);
-
-            throw new DatabaseException($msg, 0, $e);
-        }
+        $this->tool->createArchive($this->database);
     }
 
     /**
-     * Get schema dump command
+     * Get user
      *
-     * @param string $schema
      * @return string
      */
-    private function getSchemaDumpCommand(string $schema): string
+    private function getUser(): string
     {
-        return $this->database->getType() === DatabaseService::TYPE_DOCKER ? $this->getDockerDumpCommand($schema) : $this->getHostDumpCommand($schema);
-    }
-
-    /**
-     * Get docker dump command
-     *
-     * @param string $schema
-     * @return string
-     */
-    private function getDockerDumpCommand(string $schema): string
-    {
-        return sprintf(
-            'docker exec %s sh -c "mysqldump%s%s %s" > %s',
-            escapeshellarg($this->database->getDockerContainer()),
-            $this->prepareUser(),
-            $this->preparePassword(),
-            escapeshellarg($schema),
-            escapeshellarg($this->database->getSource())
-        );
-    }
-
-    /**
-     * Get host dump command
-     *
-     * @param string $schema
-     * @return string
-     */
-    private function getHostDumpCommand(string $schema): string
-    {
-        return sprintf(
-            'mysqldump%s%s%s %s > %s',
-            $this->prepareHost(),
-            $this->prepareUser(),
-            $this->preparePassword(),
-            escapeshellarg($schema),
-            escapeshellarg($this->database->getSource())
-        );
+        return sprintf(' -u %s', $this->prepareUser());
     }
 }
