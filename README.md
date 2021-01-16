@@ -13,9 +13,9 @@ Backup is an application to organize file and database backups. It supports comp
 ## Features
 
 * Simple configuration
-* Strong compressions
-* Supports [MariaDB](https://mariadb.org/), [MongoDB](https://www.mongodb.com/) and [MySQL](https://www.mysql.com/)
-* Supports ***dockerized*** databases
+* Strong compressions *(Bzip2, Gzip)*
+* Supports [MariaDB](https://mariadb.org/), [MongoDB](https://www.mongodb.com/), [MySQL](https://www.mysql.com/) and [PostgreSQL](https://www.postgresql.org/) databases
+* Supports Docker container
 * Execute commands before and after
 * Secure and encrypted transfers
 * Email reports

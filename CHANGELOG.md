@@ -2,17 +2,9 @@
 
 All notable changes will be documented in this file.
 
-## <a name="v1-0-0-dev"></a> [1.0.0-dev](https://github.com/bloodhunterd/backup/releases/tag/1.0.0-dev) - 07.01.2021
+## <a name="v1-0-0"></a> [1.0.0](https://github.com/bloodhunterd/backup/releases/tag/1.0.0) &#9839; 16.01.2021
 
-* Canceled support for PHP 7.3
-* Added execution by CLI
-* Phar support canceled
-* Added support for MongoDB (ref. issue #9)
-* Updated PHP version to 8.0 on Docker image
-* Added missing BZIP2 package (Docker)
-* Merged with previously separated docker repository
-* Added email validation
-* Added Ko-fi link
+* Resolved issue #9 Add support to backup different databases
 * Fixed issue #12 Execute command after backup even if an error occurred
 * Fixed issue #11 Wrong display of seconds in duration time
 * Resolved issue #8 Execute command before and after backup
