@@ -1,10 +1,9 @@
 <?php
-
 /*
  * @package    Backup
  * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * @link       https://github.com/bloodhunterd/backup
+ * @copyright  © 2021 BloodhunterD
  */
 
 declare(strict_types=1);
@@ -65,22 +64,30 @@ class Configuration
      */
     public function load(): void
     {
-        $validator = new SchemaValidator(new Schema(RES_DIR . DIRECTORY_SEPARATOR . 'config.schema.json'));
-
-        $json = file_get_contents($this->path);
-        if ($json === false) {
+        $config = file_get_contents($this->path);
+        if ($config === false) {
             throw new ConfigurationException(sprintf('Failed to load the configuration from "%s".', $this->path));
         }
 
+        $validator = new SchemaValidator(new Schema(RES_DIR . DIRECTORY_SEPARATOR . 'config.schema.json'));
+
         try {
-            $validator->validateJsonString($json);
+            switch (pathinfo($this->path, PATHINFO_EXTENSION)) {
+                case 'json':
+                    $validator->validateJsonString($config);
+
+                    $this->settings = json_decode($config, true);
+                    break;
+                case 'yml':
+                    $validator->validateYamlString($config);
+
+                    $this->settings = yaml_parse($config);
+            }
         } catch (PropertyExceptionInterface | SchemaExceptionInterface $e) {
             $msg = 'The configuration is invalid. %s';
 
             throw new ConfigurationException(sprintf($msg, $e->getMessage()));
         }
-
-        $this->settings = json_decode($json, true);
 
         $this->logger->use('app')->info('Configuration loaded.');
     }
