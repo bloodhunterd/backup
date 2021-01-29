@@ -6,9 +6,10 @@
         "ext-bz2": "*",
         "ext-intl": "*",
         "ext-json": "*",
+        "ext-yaml": "*",
         "monolog/monolog": "^2.0",
-        "vection-framework/di-container": "^0.3",
-        "vection-framework/validator": "^0.3",
+        "vection-framework/di-container": "dev-master",
+        "vection-framework/validator": "dev-master",
         "twig/twig": "^3.0"
     },
     "require-dev": {

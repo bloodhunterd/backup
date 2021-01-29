@@ -7,12 +7,13 @@ Backup is an application to organize file and database backups. It supports comp
 ## Features
 
 * Simple configuration
-* Supports dockerized databases
-* Strong compression
-* Secure, encrypted transfer
-* Email report
-* Shows backup size and duration
+* Strong compressions *(Bzip2, Gzip)*
+* Supports [MariaDB](https://mariadb.org/), [MongoDB](https://www.mongodb.com/), [MySQL](https://www.mysql.com/) and [PostgreSQL](https://www.postgresql.org/) databases
+* Supports Docker container
 * Execute commands before and after
+* Secure and encrypted transfers
+* Email reports
+* Shows backup size and duration
 
 ## Deployment
 
@@ -47,7 +48,7 @@ services:
 #### Environment
 
 | ENV | Values&#185; | Description
-|--- |--- |---
+| --- | ------------ | -----------
 | CRON_HOUR | 0 - 23 | Hour of CRON execution.
 | CRON_MINUTE | 0 - 59 | Minute of CRON execution.
 | SMTP_HOST | *FQDN or IP* | Mail server address.
@@ -65,10 +66,13 @@ services:
 #### Volumes
 
 | Volume | Path | Read only | Description
-|--- |--- |--- |---
-| Backup directory | /srv/backup/ | &#10007; | Backup directory path
-| Configuration | /srv/backup.json | &#10003; | Configuration file path
-| Private key | /srv/id_rsa | &#10003; | OpenSSH private key file path
+| ------ | ---- | :-------: | -----------
+| Backup directory | /srv/backup/ | &#10007; | Backup directory path.
+| Configuration | /srv/backup.json | &#10003; | Configuration file path.
+| Private key | /srv/id_rsa | &#10003; | OpenSSH private key file path.
+
+| &#10004; Yes | &#10008; No
+| ------------ | -----------
 
 ## Update
 

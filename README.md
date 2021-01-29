@@ -49,7 +49,7 @@ Download the project and place it somewhere on your server. Download the distrib
 **Note:** A good start is to enable the debugging mode in configuration and run the backup manually to ensure everything works fine.
 
 ```bash
-0 4 * * * php /srv/cli.php ./config.json >> /var/log/backup.log
+0 4 * * * php /srv/cli.php ./config.json >> /var/log/backup.log 2>&1
 ```
 *In this example the backup runs every night at 4am.*
 
