@@ -1,27 +1,10 @@
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/bloodhunterd)
-
-# Backup
-
-Backup is an application to organize file and database backups. It supports compression, encrypted transfer, email reports and command execution before and after a process.
-
-## Features
-
-* Simple configuration
-* Strong compressions *(Bzip2, Gzip)*
-* Supports [MariaDB](https://mariadb.org/), [MongoDB](https://www.mongodb.com/), [MySQL](https://www.mysql.com/) and [PostgreSQL](https://www.postgresql.org/) databases
-* Supports Docker container
-* Execute commands before and after
-* Secure and encrypted transfers
-* Email reports
-* Shows backup size and duration
-
 ## Deployment
 
 Download the agent or manager configuration from the asset section of the respective release. [See GitHub releases](https://github.com/bloodhunterd/backup/releases).
 
 **Note:** A good start is to enable the debugging mode in configuration and run the backup manually to ensure everything works fine.
 
-### Docker Compose
+### Configuration
 
 ```yaml
 version: '2.4'
@@ -42,8 +25,6 @@ services:
       - ./backup.json:/srv/backup.json:ro
       - ./id_rsa:/srv/id_rsa:ro
 ```
-
-### Configuration
 
 #### Environment
 
@@ -78,21 +59,7 @@ services:
 
 Please note the [changelog](https://github.com/bloodhunterd/backup/blob/master/CHANGELOG.md) to check for configuration changes before updating.
 
-### Docker Compose
-
 ```bash
 docker-compose pull
 docker-compose up -d
 ```
-
-## Authors
-
-* [BloodhunterD](https://github.com/bloodhunterd)
-
-## License
-
-This project is licensed under the MIT - see [LICENSE.md](https://github.com/bloodhunterd/backup/blob/master/LICENSE) file for details.
-
-## Footnotes
-
-&#185; *Possible values are separated by a slash. A range is indicated by a dash.*
