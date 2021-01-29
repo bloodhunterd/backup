@@ -4,9 +4,8 @@ on:
   push:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+-dev'
-      - '[0-9]+.[0-9]+.[0-9]+-beta'
-      - 'latest'
+      - '[0-9]+.[0-9]+.[0-9]+-dev-[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-beta-[0-9]+'
 
 jobs:
   release:
@@ -21,6 +20,7 @@ jobs:
       - name: Prepare environment variables
         run: |
           echo "REPOSITORY=$GITHUB_REPOSITORY" >> $GITHUB_ENV
+          echo "VERSION=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -39,3 +39,14 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           repository: ${{ env.REPOSITORY }}
           tag_with_ref: true
+
+      - name: Build and push Docker image latest version
+        if: (contains(env.VERSION, '-beta') || contains(env.VERSION, '-dev')) != true
+        uses: docker/build-push-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          repository: ${{ env.REPOSITORY }}
+          tags: ${{ env.REPOSITORY }}:latest
