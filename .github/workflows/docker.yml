@@ -49,4 +49,4 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           repository: ${{ env.REPOSITORY }}
-          tags: ${{ env.REPOSITORY }}:latest
+          tags: latest

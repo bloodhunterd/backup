@@ -2,7 +2,13 @@
 
 All notable changes will be documented in this file.
 
-## <a name="v1-0-0"></a> [1.0.0](https://github.com/bloodhunterd/backup/releases/tag/1.0.0) &#9839; 16.01.2021
+<a name="v1-1-0"></a>
+## [1.1.0](https://github.com/bloodhunterd/backup/releases/tag/1.1.0) &#9839; 29.01.2021
+
+* Resolved issue #13 Support YAML as configuration file format
+
+<a name="v1-0-0"></a>
+## [1.0.0](https://github.com/bloodhunterd/backup/releases/tag/1.0.0) &#9839; 16.01.2021
 
 * Resolved issue #9 Add support to backup different databases
 * Fixed issue #12 Execute command after backup even if an error occurred
