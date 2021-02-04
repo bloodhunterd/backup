@@ -58,23 +58,3 @@ jobs:
           asset_path: application
           asset_name: Backup.tar.gz
           asset_content_type: application/gzip
-
-      - name: Add Agent config
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/agent.dist.json
-          asset_name: Backup-Config-Agent.json
-          asset_content_type: application/json
-
-      - name: Add Manager config
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/manager.dist.json
-          asset_name: Backup-Config-Manager.json
-          asset_content_type: application/json
