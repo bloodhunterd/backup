@@ -44,7 +44,7 @@ Backup is an application to organize file and database backups. It supports comp
 
 ## Deployment
 
-Download the project and place it somewhere on your server. Download the distributed agent&#185; and manager&#178; configuration files and place it somewhere on your server. Adjust the configuration file for your needs and add an entry into the Cron table to execute this application periodically.
+Download the project and place it somewhere on your server. Adjust the configuration file for your needs and add an entry into the Cron table to execute this application periodically.
 
 **Note:** A good start is to enable the debugging mode in configuration and run the backup manually to ensure everything works fine.
 
@@ -80,7 +80,3 @@ Backup is also available as Docker image. See [Docker Hub](https://hub.docker.co
 ## License
 
 This project is licensed under the MIT - see [LICENSE.md](https://github.com/bloodhunterd/backup/blob/master/LICENSE) file for details.
-
-## Footnotes
-
-&#185;,&#178; *See the asset section under the respective release.*

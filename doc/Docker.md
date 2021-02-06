@@ -1,7 +1,5 @@
 ## Deployment
 
-Download the agent or manager configuration from the asset section of the respective release. [See GitHub releases](https://github.com/bloodhunterd/backup/releases).
-
 **Note:** A good start is to enable the debugging mode in configuration and run the backup manually to ensure everything works fine.
 
 ### Configuration
