@@ -1,9 +1,7 @@
 <?php
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd/backup
- * @copyright  © 2021 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -24,8 +22,7 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  * Class MongoDbService
  *
  * @package Backup\Agent\Service\Database
- *
- * @author BloodhunterD
+ * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class MongoDbService
 {
@@ -35,25 +32,24 @@ class MongoDbService
      * @var Logger
      * @Inject("Backup\Logger")
      */
-    private $logger;
+    private Logger $logger;
 
     /**
      * @var Configuration
      * @Inject("Backup\Configuration")
      */
-    private $config;
+    private Configuration $config;
 
     /**
      * @var Tool
      * @Inject("Backup\Tool")
      */
-    private $tool;
+    private Tool $tool;
 
     /**
      * Backup a database
      *
      * @param DatabaseModel $database
-     *
      * @throws DatabaseException
      */
     public function backupDatabase(DatabaseModel $database): void
@@ -61,15 +57,19 @@ class MongoDbService
         $name = $database->getName();
         $isDocker = $database->getType() === DatabaseService::TYPE_DOCKER;
 
-        try {
-            $this->tool->createDirectory($database->getTarget());
-        } catch (ToolException $e) {
+        if (!$this->tool->createDirectory($database->getTarget())) {
             $msg = sprintf('Failed to create target directory for database backup "%s".', $name);
 
-            throw new DatabaseException($msg, 0, $e);
+            throw new DatabaseException($msg);
         }
 
-        $database->setArchive($this->tool::sanitize($name) . '.mongo.gz');
+        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
+
+        try {
+            $database->setArchive($this->tool::sanitize($name) . '.mongo.gz');
+        } catch (ToolException $e) {
+            throw new DatabaseException($e->getMessage(), 0, $e);
+        }
 
         $cmd = 'mongodump --gzip --archive=-';
         if ($isDocker) {

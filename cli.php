@@ -1,9 +1,7 @@
 <?php
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -24,15 +22,15 @@ $longOptions = [
 try {
     $options = getopt(implode($shortOptions), $longOptions);
     if (!$options) {
-        throw new Exception('Failed to parse given arguments. Maybe they are invalid or missing?');
+        throw new RuntimeException('Failed to parse given arguments. Maybe they are invalid or missing?');
     }
 
-    if (isset($options['config'])) {
+    if (is_string($options['config'])) {
         $configPath = $options['config'];
-    } else if (isset($options['c'])) {
+    } else if (is_string($options['c'])) {
         $configPath = $options['c'];
     } else {
-        throw new Exception('Parameter "-c" or "--config" for the configuration file path is missing.');
+        throw new RuntimeException('Parameter "-c" or "--config" for the configuration file path is missing.');
     }
 
     (new Bootstrap($configPath))->init()->run();

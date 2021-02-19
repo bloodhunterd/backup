@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -17,16 +14,16 @@ use Backup\Exception\ConfigurationException;
 use Backup\Interfaces\Backup;
 use Backup\Manager\Manager;
 use Backup\Report\Report;
-use Exception;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonologLogger;
 use Vection\Component\DI\Container;
+use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
+use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
 
 /**
  * Class Bootstrap
  *
  * @package Backup
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Bootstrap
@@ -35,15 +32,16 @@ class Bootstrap
     /**
      * @var Container
      */
-    private $container;
+    private Container $container;
 
     /**
      * @var string
      */
-    private $configPath;
+    private string $configPath;
 
     /**
-     * Bootstrap constructor
+     * Bootstrap constructor.
+     * @param string $configPath
      */
     public function __construct(string $configPath)
     {
@@ -60,7 +58,7 @@ class Bootstrap
      * Initialize the backup application
      *
      * @return Backup
-     * @throws Exception
+     * @throws BackupException|PropertyExceptionInterface|SchemaExceptionInterface
      */
     public function init(): Backup
     {

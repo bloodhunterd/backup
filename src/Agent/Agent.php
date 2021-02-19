@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -32,7 +29,6 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  * Class Agent
  *
  * @package Backup\Agent
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Agent implements Backup
@@ -117,15 +113,13 @@ class Agent implements Backup
 
                 $duration = $this->tool->getDuration();
             } catch (DirectoryException $e) {
-                $this->logger->use('app')->error($e->getMessage(), [
-                    'previous' => $e->getPrevious()->getMessage()
-                ]);
+                $this->logger->use('app')->error($e->getMessage());
                 $this->logger->use('app')->debug($e->getTraceAsString());
 
                 $this->report->add(
                     Report::RESULT_ERROR,
                     self::TYPE_DIRECTORY,
-                    $e->getPrevious()->getMessage(),
+                    $e->getMessage(),
                     $directoryModel
                 );
 
@@ -191,15 +185,13 @@ class Agent implements Backup
 
                 $duration = $this->tool->getDuration();
             } catch (DatabaseException $e) {
-                $this->logger->use('app')->error($e->getMessage(), [
-                    'previous' => $e->getPrevious()->getMessage()
-                ]);
+                $this->logger->use('app')->error($e->getMessage());
                 $this->logger->use('app')->debug($e->getTraceAsString());
 
                 $this->report->add(
                     Report::RESULT_ERROR,
                     self::TYPE_DATABASE,
-                    $e->getPrevious()->getMessage(),
+                    $e->getMessage(),
                     $databaseModel
                 );
 
@@ -244,13 +236,13 @@ class Agent implements Backup
     {
         $name = $directory->getName();
 
-        try {
-            $this->tool->createDirectory($directory->getTarget());
-        } catch (ToolException $e) {
+        if (!$this->tool->createDirectory($directory->getTarget())) {
             $msg = sprintf('Failed to create target directory for directory "%s".', $name);
 
-            throw new DirectoryException($msg, 0, $e);
+            throw new DirectoryException($msg);
         }
+
+        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
 
         $directory->setArchive(Tool::sanitize($name) . '.tar.' . $this->tool->getArchiveSuffix());
 

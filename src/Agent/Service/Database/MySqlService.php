@@ -1,9 +1,7 @@
 <?php
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd/backup
- * @copyright  © 2021 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -21,7 +19,6 @@ use function in_array;
  * Class MySqlService
  *
  * @package Backup\Agent\Service\Database
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class MySqlService extends DatabaseService
@@ -45,15 +42,18 @@ class MySqlService extends DatabaseService
     {
         $this->database = $database;
 
-        try {
-            $this->tool->createDirectory($this->database->getTarget());
-        } catch (ToolException $e) {
-            $msg = sprintf('Failed to create target directory for database backup "%s".', $this->database->getName());
+        $name = $this->database->getName();
+        $isDocker = $this->database->getType() === DatabaseService::TYPE_DOCKER;
 
-            throw new DatabaseException($msg, 0, $e);
+        if (!$this->tool->createDirectory($this->database->getTarget())) {
+            $msg = sprintf('Failed to create target directory for database backup "%s".', $name);
+
+            throw new DatabaseException($msg);
         }
 
-        if ($this->database->getType() === DatabaseService::TYPE_DOCKER) {
+        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
+
+        if ($isDocker) {
             $cmd = $this->prepareDockerCommand($this->getCommand($this->getSchemataQuery()));
         } else {
             $cmd = $this->getCommand($this->getSchemataQuery());
@@ -63,7 +63,7 @@ class MySqlService extends DatabaseService
         try {
             $schemata = $this->tool->execute($cmd);
         } catch (ToolException $e) {
-            $msg = sprintf('Failed to get schemata for database backup "%s".', $this->database->getName());
+            $msg = sprintf('Failed to get schemata for database backup "%s".', $name);
 
             throw new DatabaseException($msg, 0, $e);
         }
@@ -74,9 +74,7 @@ class MySqlService extends DatabaseService
             try {
                 $this->backupSchema($schema);
             } catch (DatabaseException $e) {
-                $this->logger->use('app')->error($e->getMessage(), [
-                    'previous' => $e->getPrevious()->getMessage()
-                ]);
+                $this->logger->use('app')->error($e->getMessage());
             }
         }
     }
@@ -148,9 +146,9 @@ class MySqlService extends DatabaseService
     {
         $name = $this->database->getName();
 
-        $this->database->setSource($this->tool::sanitize($name) . '.' . $schema . '.sql');
-
         try {
+            $this->database->setSource($this->tool::sanitize($name) . '.' . $schema . '.sql');
+
             $cmd = sprintf(
                 'mysqldump%s%s%s %s',
                 $this->prepareHost(),
@@ -166,13 +164,13 @@ class MySqlService extends DatabaseService
             );
 
             $this->tool->execute($cmd);
+
+            $this->database->setArchive(Tool::sanitize($name) . '_' . $schema . '.sql.' . $this->tool->getArchiveSuffix());
         } catch (ToolException $e) {
             $msg = sprintf('Failed to create dump for schema "%s" of database backup "%s".', $schema, $name);
 
             throw new DatabaseException($msg, 0, $e);
         }
-
-        $this->database->setArchive(Tool::sanitize($name) . '_' . $schema . '.sql.' . $this->tool->getArchiveSuffix());
 
         $this->tool->createArchive($this->database);
     }

@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -20,7 +17,6 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  * Class Tool
  *
  * @package Backup
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Tool
@@ -107,20 +103,13 @@ class Tool
      * Create a directory
      *
      * @param string $path
-     *
-     * @throws ToolException
+     * @return bool
      */
-    public function createDirectory(string $path): void
+    public function createDirectory(string $path): bool
     {
         $absolutePath = $this->config->getTargetDirectory() . $path;
 
-        if (!is_dir($absolutePath)) {
-            $cmd = sprintf('mkdir -p %s', escapeshellarg($absolutePath));
-
-            $this->execute($cmd);
-        }
-
-        $this->logger->use('app')->info(sprintf('Directory "%s" created.', $absolutePath));
+        return @mkdir($absolutePath, 0776, true) || is_dir($absolutePath);
     }
 
     /**
@@ -180,8 +169,13 @@ class Tool
     {
         $this->logger->use('app')->debug(sprintf('Execute command: %s', $command));
 
+        $escapedCommand = preg_replace('/\s+/', ' ', $command);
+        if ($escapedCommand === null) {
+            throw new ToolException(sprintf('Failed to sanitize command: %s', $command));
+        }
+
         // Replace tabs and line endings with a single whitespace
-        exec(preg_replace('/\s+/', ' ', $command), $output, $return);
+        exec($escapedCommand, $output, $return);
 
         foreach ($output as $line) {
             $this->logger->use('console')->debug($line);
@@ -253,12 +247,22 @@ class Tool
      * Sanitize a string
      *
      * @param string $string
-     *
      * @return string
+     * @throws ToolException
      */
     public static function sanitize(string $string): string
     {
-        return preg_replace('/[^a-zA-Z0-9_-]/', '-', preg_replace('/\s/', '_', $string));
+        $sanitized = preg_replace('/\s/', '_', $string);
+        if ($sanitized === null) {
+            throw new ToolException(sprintf('Failed to sanitize string: %s', $string));
+        }
+
+        $sanitized = preg_replace('/[^a-zA-Z0-9_-]/', '-', $sanitized);
+        if ($sanitized === null) {
+            throw new ToolException(sprintf('Failed to sanitize string: %s', $string));
+        }
+
+        return $sanitized;
     }
 
     /**
