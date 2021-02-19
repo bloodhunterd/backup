@@ -1,9 +1,7 @@
 <?php
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd/backup
- * @copyright  © 2021 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -24,7 +22,6 @@ use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
  * Class Configuration
  *
  * @package Backup
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Configuration
@@ -34,18 +31,18 @@ class Configuration
     /**
      * @var string
      */
-    private $path;
+    private string $path;
 
     /**
      * @var mixed[]
      */
-    private $settings;
+    private array $settings;
 
     /**
      * @var Logger
      * @Inject("Backup\Logger")
      */
-    private $logger;
+    private Logger $logger;
 
     /**
      * Set the path to the configuration file
@@ -60,7 +57,7 @@ class Configuration
     /**
      * Load the settings from configuration file
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException|PropertyExceptionInterface|SchemaExceptionInterface
      */
     public function load(): void
     {
@@ -70,24 +67,9 @@ class Configuration
         }
 
         $validator = new SchemaValidator(new Schema(RES_DIR . DIRECTORY_SEPARATOR . 'config.schema.json'));
+        $validator->validateYamlString($config);
 
-        try {
-            switch (pathinfo($this->path, PATHINFO_EXTENSION)) {
-                case 'json':
-                    $validator->validateJsonString($config);
-
-                    $this->settings = json_decode($config, true);
-                    break;
-                case 'yml':
-                    $validator->validateYamlString($config);
-
-                    $this->settings = yaml_parse($config);
-            }
-        } catch (PropertyExceptionInterface | SchemaExceptionInterface $e) {
-            $msg = 'The configuration is invalid. %s';
-
-            throw new ConfigurationException(sprintf($msg, $e->getMessage()));
-        }
+        $this->settings = yaml_parse($config);
 
         $this->logger->use('app')->info('Configuration loaded.');
     }
@@ -129,7 +111,7 @@ class Configuration
      */
     public function isDebugEnabled(): bool
     {
-        return isset($this->settings['debug']) && $this->settings['debug'] === 'yes';
+        return $this->settings['debug'];
     }
 
     /**

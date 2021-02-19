@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -14,10 +11,9 @@ namespace Backup\Agent\Model;
 use Backup\Interfaces\Compressible;
 
 /**
- * Class Directory Model
+ * Class DirectoryModel
  *
  * @package Backup\Agent\Model
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class DirectoryModel implements Compressible
@@ -26,32 +22,32 @@ class DirectoryModel implements Compressible
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
      */
-    private $archive;
+    private string $archive;
 
     /**
      * @var string
      */
-    private $source;
+    private string $source;
 
     /**
      * @var string
      */
-    private $target;
+    private string $target;
 
     /**
      * @var string[]
      */
-    private $commands;
+    private array $commands;
 
     /**
      * @var bool
      */
-    private $disabled = false;
+    private bool $disabled = false;
 
     /**
      * Directory Model constructor
@@ -68,7 +64,7 @@ class DirectoryModel implements Compressible
         $this->setTarget($directory['target'] ?? '');
         $this->setCommands($directory['commands'] ?? []);
 
-        if (isset($directory['disabled']) && $directory['disabled'] === 'yes') {
+        if (isset($directory['disabled']) && $directory['disabled']) {
             $this->disable();
         }
     }

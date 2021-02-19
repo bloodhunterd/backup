@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -14,10 +11,9 @@ namespace Backup\Manager\Model;
 use Backup\Manager\Interfaces\Downloadable;
 
 /**
- * Class Server Model
+ * Class ServerModel
  *
  * @package Backup\Manager\Model
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class ServerModel implements Downloadable
@@ -26,32 +22,32 @@ class ServerModel implements Downloadable
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
      */
-    private $source;
+    private string $source;
 
     /**
      * @var string
      */
-    private $target = DIRECTORY_SEPARATOR;
+    private string $target = DIRECTORY_SEPARATOR;
 
     /**
      * @var string
      */
-    private $host;
+    private string $host;
 
     /**
      * @var SSHModel
      */
-    private $ssh;
+    private SSHModel $ssh;
 
     /**
      * @var bool
      */
-    private $disabled = false;
+    private bool $disabled = false;
 
     /**
      * Server Model constructor
@@ -69,7 +65,7 @@ class ServerModel implements Downloadable
         # Optional
         $this->setTarget($server['target'] ?? $this->target);
 
-        if (isset($server['disabled']) && $server['disabled'] === 'yes') {
+        if (isset($server['disabled']) && $server['disabled']) {
             $this->disable();
         }
     }

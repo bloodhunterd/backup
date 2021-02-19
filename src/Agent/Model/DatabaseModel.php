@@ -1,9 +1,7 @@
 <?php
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd/backup
- * @copyright  © 2021 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -18,7 +16,6 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  * Class DatabaseModel
  *
  * @package Backup\Agent\Model
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class DatabaseModel implements Compressible
@@ -103,7 +100,7 @@ class DatabaseModel implements Compressible
         $this->setType($source['type'] ?? DatabaseService::TYPE_HOST);
         $this->setUser($source['user'] ?? '');
 
-        if (isset($database['disabled']) && $database['disabled'] === 'yes') {
+        if (isset($database['disabled']) && $database['disabled']) {
             $this->disable();
         }
 

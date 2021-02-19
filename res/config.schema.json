@@ -2,8 +2,7 @@
   "@type": "object",
   "@properties": {
     "debug": {
-      "@type": "string",
-      "@allowed": "yes|no"
+      "@type": "boolean"
     },
     "mode": {
       "@type": "string",
@@ -65,8 +64,7 @@
           }
         },
         "disabled": {
-          "@type": "string",
-          "@allowed": "yes|no"
+          "@type": "boolean"
         }
       }
     },
@@ -114,8 +112,7 @@
                 "@type": "string"
               },
               "disabled": {
-                "@type": "string",
-                "@allowed": "yes|no"
+                "@type": "boolean"
               }
             }
           }
@@ -138,8 +135,7 @@
                 "@type": "string"
               },
               "disabled": {
-                "@type": "string",
-                "@allowed": "yes|no"
+                "@type": "boolean"
               },
               "commands": {
                 "@type": "object",
@@ -195,8 +191,7 @@
                 "@type": "string"
               },
               "disabled": {
-                "@type": "string",
-                "@allowed": "yes|no"
+                "@type": "boolean"
               }
             }
           }

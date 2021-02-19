@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+# © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
+
 # ===================================================
 # Timezone
 # ===================================================
@@ -11,7 +14,7 @@ echo "${TZ}" > /etc/timezone
 # Cron
 # ===================================================
 
-echo "${CRON_MINUTE} ${CRON_HOUR} * * * php /srv/cli.php -c /srv/backup.json > /dev/null 2>&1" > /etc/cron.d/backup
+echo "${CRON_MINUTE} ${CRON_HOUR} * * * php /srv/backup/cli.php -c /srv/backup.yml > /dev/null 2>&1" > /etc/cron.d/backup
 
 crontab /etc/cron.d/backup
 

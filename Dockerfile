@@ -1,3 +1,6 @@
+# This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+# © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
+
 FROM debian:stable-slim
 
 # ===================================================
@@ -5,8 +8,6 @@ FROM debian:stable-slim
 # ===================================================
 
 ARG PHP_VERSION=7.4
-
-ENV TZ 'Europe/Berlin'
 
 ENV CRON_MINUTE 0
 ENV CRON_HOUR 3
@@ -21,6 +22,8 @@ ENV SMTP_PASSWORD ''
 ENV SMTP_TLS 'on'
 ENV SMTP_STARTTLS 'off'
 ENV SMTP_CERTCHECK 'on'
+
+ENV TZ 'Europe/Berlin'
 
 # ===================================================
 # Base packages
@@ -61,6 +64,7 @@ RUN apt-get install -y --no-install-recommends \
     php${PHP_VERSION}-bz2 \
     php${PHP_VERSION}-cli \
     php${PHP_VERSION}-intl \
+    php${PHP_VERSION}-yaml \
     rsync
 
 # ===================================================
@@ -77,16 +81,16 @@ RUN mkdir /backup
 
 RUN touch /var/log/backup.log
 
-COPY ./config /srv/config
-COPY ./res /srv/res
-COPY ./src /srv/src
-COPY ./vendor /srv/vendor
-COPY ./cli.php /srv
-COPY ./CHANGELOG.md /srv
-COPY ./composer.json /srv
-COPY ./composer.lock /srv
-COPY ./LICENSE /srv
-COPY ./README.md /srv
+COPY ./config /srv/backup/config
+COPY ./res /srv/backup/res
+COPY ./src /srv/backup/src
+COPY ./vendor /srv/backup/vendor
+COPY ./cli.php /srv/backup
+COPY ./CHANGELOG.md /srv/backup
+COPY ./composer.json /srv/backup
+COPY ./composer.lock /srv/backup
+COPY ./LICENSE /srv/backup
+COPY ./README.md /srv/backup
 COPY ./start.sh /
 
 # ===================================================
