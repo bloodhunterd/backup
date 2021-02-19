@@ -16,12 +16,11 @@ services:
       SMTP_DOMAIN: example.com
       SMTP_FROM: noreply@example.com
       SMTP_USER: root
-      SMTP_PASSWORD: +V3ryS3cr3tP4ssw0rd#
+      SMTP_PASSWORD: V3ryS3cr3tP4ssw0rd
     restart: unless-stopped
     volumes:
       - ./backup/:/backup/
-      - ./backup.json:/srv/backup.json:ro
-      - ./id_rsa:/srv/id_rsa:ro
+      - ./backup.yml:/srv/backup.yml:ro
 ```
 
 #### Environment
@@ -46,9 +45,8 @@ services:
 
 | Volume | Path | Read only | Description
 | ------ | ---- | :-------: | -----------
-| Backup directory | /srv/backup/ | &#10007; | Backup directory path.
-| Configuration | /srv/backup.json | &#10003; | Configuration file path.
-| Private key | /srv/id_rsa | &#10003; | OpenSSH private key file path.
+| Backup directory | /backup/ | &#10007; | Backup directory path.
+| Configuration | /srv/backup.yml | &#10003; | Configuration file path.
 
 | &#10004; Yes | &#10008; No
 | ------------ | -----------

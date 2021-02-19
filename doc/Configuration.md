@@ -3,6 +3,7 @@
 The configuration format is **YAML**. The previously used **JSON** format is now deprecated, so no configuration example will be provided.
 
 ```yaml
+debug: false
 timezone: Europe/Berlin
 language: de_DE.utf8
 report:
@@ -37,7 +38,7 @@ sources:
     - name: Second directory
       source: /path/to/second/directory
       target: /second/directory
-      disabled: 'yes'
+      disabled: true
   databases:
     - name: First database
       source:
@@ -45,9 +46,9 @@ sources:
         type: host
         host: localhost
         user: root
-        password: SecretPassword
+        password: V3ryS3cr3tP4ssw0rd
       target: /first/database
-      disabled: 'no'
+      disabled: false
     - name: Second database
       source:
         system: mongodb
@@ -70,7 +71,7 @@ sources:
         key: /path/to/ssh/key
       source: /path/to/backup/directory
       target: /first/directory
-      disabled: 'yes'
+      disabled: true
     - name: Second server
       host: domain.or.ip
       ssh:
