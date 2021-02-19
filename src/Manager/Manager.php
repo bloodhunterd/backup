@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -28,7 +25,6 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  * Class Manager
  *
  * @package Backup\Manager
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Manager implements Backup
@@ -39,25 +35,25 @@ class Manager implements Backup
      * @var Configuration
      * @Inject("Backup\Configuration")
      */
-    private $config;
+    private Configuration $config;
 
     /**
      * @var Logger
      * @Inject("Backup\Logger")
      */
-    private $logger;
+    private Logger $logger;
 
     /**
      * @var Tool
      * @Inject("Backup\Tool")
      */
-    private $tool;
+    private Tool $tool;
 
     /**
      * @var Report
      * @Inject("Backup\Report\Report")
      */
-    private $report;
+    private Report $report;
 
     /**
      * @inheritDoc
@@ -95,19 +91,28 @@ class Manager implements Backup
 
                 $duration = $this->tool->getDuration();
             } catch (DownloadException | DirectoryException $e) {
-                $this->logger->use('app')->error($e->getMessage(), [
-                    'previous' => $e->getPrevious()->getMessage(),
-                ]);
+                $this->logger->use('app')->error($e->getMessage());
                 $this->logger->use('app')->debug($e->getTraceAsString());
 
                 $this->report->add(
                     Report::RESULT_ERROR,
                     self::TYPE_SERVER,
-                    $e->getPrevious()->getMessage(),
+                    $e->getMessage(),
                     $serverModel
                 );
 
                 continue;
+            }
+
+            $cmd = sprintf('du -sb %s', $serverModel->getTarget());
+
+            try {
+                $fileSize = (int) $this->tool->execute($cmd)[0];
+            } catch (ToolException $e) {
+                $this->logger->use('app')->error($e->getMessage());
+                $this->logger->use('app')->debug($e->getTraceAsString());
+
+                $fileSize = null;
             }
 
             $this->report->add(
@@ -115,7 +120,7 @@ class Manager implements Backup
                 self::TYPE_SERVER,
                 'Files downloaded.',
                 $serverModel,
-                null,
+                $fileSize ?: null,
                 $duration
             );
         }
@@ -141,13 +146,13 @@ class Manager implements Backup
     {
         $name = $server->getName();
 
-        try {
-            $this->tool->createDirectory($server->getTarget());
-        } catch (ToolException $e) {
+        if (!$this->tool->createDirectory($server->getTarget())) {
             $msg = sprintf('Failed to create target directory for directory "%s".', $name);
 
-            throw new DirectoryException($msg, 0, $e);
+            throw new DirectoryException($msg);
         }
+
+        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
 
         $server->setTarget($this->config->getTargetDirectory() . $server->getTarget());
 

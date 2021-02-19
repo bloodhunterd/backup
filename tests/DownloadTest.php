@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -20,7 +17,6 @@ use PHPUnit\Framework\TestCase;
  * Class DownloadTest
  *
  * @package Backup\Tests
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class DownloadTest extends TestCase
@@ -59,7 +55,7 @@ class DownloadTest extends TestCase
         ]);
 
         $cmd = sprintf(
-            'rsync -r -t -e "ssh -t -q -o "StrictHostKeyChecking=no" -p %d -i %s" %s@%s:%s %s',
+            'rsync -r -t -e "ssh -t -q -o StrictHostKeyChecking=no -p %d -i %s" %s@%s:%s %s',
             2222,
             escapeshellarg('/root/.ssh/id_rsa'),
             'backupuser',
