@@ -1,5 +1,5 @@
 [![Release](https://img.shields.io/github/v/release/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/releases)
-![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-blueviolet?style=for-the-badge)
+![PHPStan](https://img.shields.io/badge/PHPStan-Level%208-blueviolet?style=for-the-badge)
 [![Tests](https://img.shields.io/github/workflow/status/bloodhunterd/backup/PHP?style=for-the-badge&label=Tests)](https://github.com/bloodhunterd/backup/actions?query=workflow%3APHP)
 [![Docker](https://img.shields.io/github/workflow/status/bloodhunterd/backup/PHP?style=for-the-badge&label=Docker%20Build)](https://github.com/bloodhunterd/backup/actions?query=workflow%3ADocker)
 [![License](https://img.shields.io/github/license/bloodhunterd/backup?style=for-the-badge)](https://github.com/bloodhunterd/backup/blob/master/LICENSE)
@@ -49,7 +49,7 @@ Download the project and place it somewhere on your server. Adjust the configura
 **Note:** A good start is to enable the debugging mode in configuration and run the backup manually to ensure everything works fine.
 
 ```bash
-0 4 * * * php /srv/cli.php ./config.json >> /var/log/backup.log 2>&1
+0 4 * * * php /srv/backup/cli.php /srv/backup.yml >> /var/log/backup.log 2>&1
 ```
 *In this example the backup runs every night at 4am.*
 

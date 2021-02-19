@@ -2,6 +2,14 @@
 
 All notable changes will be documented in this file.
 
+<a name="v2-0-0"></a>
+## [2.0.0](https://github.com/bloodhunterd/backup/releases/tag/2.0.0) &#9839; 19.02.2021
+
+* Canceled JSON config format support
+* Added missing YAML config format support for Docker image
+* Error messages in reports simplified
+* Fixed issue #14 Missing file size in download report
+
 <a name="v1-1-0"></a>
 ## [1.1.0](https://github.com/bloodhunterd/backup/releases/tag/1.1.0) &#9839; 29.01.2021
 
