@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -12,10 +9,9 @@ declare(strict_types=1);
 namespace Backup\Manager\Model;
 
 /**
- * Class SSH Model
+ * Class SSHModel
  *
  * @package Backup\Manager\Model
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class SSHModel
@@ -24,22 +20,22 @@ class SSHModel
     /**
      * @var int
      */
-    private $port = 22;
+    private int $port = 22;
 
     /**
      * @var string
      */
-    private $user = 'root';
+    private string $user = 'root';
 
     /**
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * @var string
      */
-    private $passphrase = '';
+    private string $passphrase = '';
 
     /**
      * SSH Model constructor

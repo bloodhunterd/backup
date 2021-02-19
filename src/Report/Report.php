@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -29,7 +26,6 @@ use Vection\Component\DI\Traits\AnnotationInjection;
  * Class Report
  *
  * @package Backup\Report
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Report
@@ -63,34 +59,34 @@ class Report
     /**
      * @var ReportSenderModel
      */
-    private $sender;
+    private ReportSenderModel $sender;
 
     /**
      * @var string
      */
-    private $subject;
+    private string $subject;
 
     /**
      * @var ReportRecipientModel[]
      */
-    private $recipients;
+    private array $recipients;
 
     /**
      * @var mixed[]
      */
-    private $tasks = [];
+    private array $tasks = [];
 
     /**
      * @var Configuration
      * @Inject("Backup\Configuration")
      */
-    private $config;
+    private Configuration $config;
 
     /**
      * @var Tool
      * @Inject("Backup\Tool")
      */
-    private $tool;
+    private Tool $tool;
 
     /**
      * Set the sender
@@ -161,7 +157,7 @@ class Report
             'Reply-To: ' . $sender,
             'MIME-Version: 1.0',
             'Content-Type: text/html; charset=utf-8',
-            'X-Application: Backup'
+            'X-Application: Backup by BloodhunterD'
         ];
 
         $to = [];
@@ -265,7 +261,7 @@ class Report
      * @param string $status
      * @return string
      */
-    public static function getBackgroundColor(string $status): string
+    private static function getBackgroundColor(string $status): string
     {
         return self::COLORS[$status] ?? self::COLORS['DEFAULT'];
     }

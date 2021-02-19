@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -12,10 +9,9 @@ declare(strict_types=1);
 namespace Backup\Report\Model;
 
 /**
- * Class Report Recipient Model
+ * Class ReportRecipientModel
  *
  * @package Backup\Report\Model
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class ReportRecipientModel
@@ -24,17 +20,17 @@ class ReportRecipientModel
     /**
      * @var string
      */
-    private $address = '';
+    private string $address = '';
 
     /**
      * @var string
      */
-    private $name = '';
+    private string $name = '';
 
     /**
      * @var string
      */
-    private $type = 'to';
+    private string $type = 'to';
 
     /**
      * Report Recipient Model constructor

@@ -1,10 +1,7 @@
 <?php
-
 /*
- * @package    Backup
- * @author     BloodhunterD <bloodhunterd@bloodhunterd.com>
- * @link       https://github.com/bloodhunterd
- * @copyright  © 2020 BloodhunterD
+ * This file ist part of the Backup project, see https://github.com/bloodhunterd/Backup.
+ * © 2021 BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 
 declare(strict_types=1);
@@ -18,7 +15,6 @@ use Monolog\Logger as MonologLogger;
  * Class Logger
  *
  * @package Backup
- *
  * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Logger
@@ -26,12 +22,12 @@ class Logger
     /**
      * @var LineFormatter
      */
-    private $lineFormatter;
+    private LineFormatter $lineFormatter;
 
     /**
      * @var MonologLogger[]
      */
-    private $loggers = [];
+    private array $loggers = [];
 
     /**
      * Logger constructor
