@@ -10,6 +10,7 @@ namespace Backup;
 
 use Backup\Exception\ToolException;
 use Backup\Interfaces\Compressible;
+use Monolog\Logger;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
 
@@ -43,7 +44,7 @@ class Tool
 
     /**
      * @var Logger
-     * @Inject("Backup\Logger")
+     * @Inject("Monolog\Logger")
      */
     private Logger $logger;
 
@@ -55,12 +56,12 @@ class Tool
     public function setTimezone(string $timezone): void
     {
         if (date_default_timezone_set($timezone)) {
-            $this->logger->use('app')->info(sprintf('Timezone set to "%s".', $timezone));
+            $this->logger->info(sprintf('Timezone set to "%s".', $timezone));
 
             return;
         }
 
-        $this->logger->use('app')->warning(sprintf(
+        $this->logger->warning(sprintf(
             'The timezone "%s" is either not supported or installed. Use fallback timezone "%s" instead.',
             $timezone,
             date_default_timezone_get()
@@ -87,12 +88,12 @@ class Tool
     public function setLanguage(string $locale): void
     {
         if ($this->setLocale(LC_ALL, $locale)) {
-            $this->logger->use('app')->info(sprintf('Language set to "%s".', $locale));
+            $this->logger->info(sprintf('Language set to "%s".', $locale));
 
             return;
         }
 
-        $this->logger->use('app')->warning(sprintf(
+        $this->logger->warning(sprintf(
             'The language "%s" is either not supported or installed. Fallback to "%s".',
             $locale,
             $this->setLocale(LC_ALL, '0')
@@ -147,14 +148,14 @@ class Tool
                     $msg = ' Unknown error occurred.';
             }
 
-            $this->logger->use('app')->error(
+            $this->logger->error(
                 sprintf('Failed to create archive for "%s.%s".', $compressible->getName(), $msg)
             );
 
             return;
         }
 
-        $this->logger->use('app')->info(sprintf('Archive "%s" created.', $target));
+        $this->logger->info(sprintf('Archive "%s" created.', $target));
     }
 
     /**
@@ -167,7 +168,9 @@ class Tool
      */
     public function execute(string $command): array
     {
-        $this->logger->use('app')->debug(sprintf('Execute command: %s', $command));
+        $logger = $this->logger->withName(LOGGER_CLI);
+
+        $logger->debug(sprintf('Execute command: %s', $command));
 
         $escapedCommand = preg_replace('/\s+/', ' ', $command);
         if ($escapedCommand === null) {
@@ -175,13 +178,13 @@ class Tool
         }
 
         // Replace tabs and line endings with a single whitespace
-        exec($escapedCommand, $output, $return);
+        exec($escapedCommand . ' 2>&1', $output, $return);
 
         foreach ($output as $line) {
-            $this->logger->use('console')->debug($line);
+            $logger->debug($line);
         }
 
-        $this->logger->use('app')->debug(sprintf('Return status: %d', $return));
+        $logger->debug(sprintf('Return status: %d', $return));
 
         # If the return status is not zero, the command failed
         if ($return !== 0) {

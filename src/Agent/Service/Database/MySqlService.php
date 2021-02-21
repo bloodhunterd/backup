@@ -51,7 +51,7 @@ class MySqlService extends DatabaseService
             throw new DatabaseException($msg);
         }
 
-        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
+        $this->logger->info(sprintf('Target directory "%s" created.', $name));
 
         if ($isDocker) {
             $cmd = $this->prepareDockerCommand($this->getCommand($this->getSchemataQuery()));
@@ -74,7 +74,7 @@ class MySqlService extends DatabaseService
             try {
                 $this->backupSchema($schema);
             } catch (DatabaseException $e) {
-                $this->logger->use('app')->error($e->getMessage());
+                $this->logger->error($e->getMessage());
             }
         }
     }

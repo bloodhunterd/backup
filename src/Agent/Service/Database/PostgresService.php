@@ -57,7 +57,7 @@ class PostgresService extends DatabaseService
             throw new DatabaseException($msg);
         }
 
-        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
+        $this->logger->info(sprintf('Target directory "%s" created.', $name));
 
         try {
             $this->database->setSource($this->tool::sanitize($name) . '.sql');

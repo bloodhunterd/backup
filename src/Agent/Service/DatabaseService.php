@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Backup\Agent\Service;
 
 use Backup\Agent\Model\DatabaseModel;
-use Backup\Logger;
+use Monolog\Logger;
 use Backup\Tool;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
@@ -40,7 +40,7 @@ abstract class DatabaseService
 
     /**
      * @var Logger
-     * @Inject("Backup\Logger")
+     * @Inject("Monolog\Logger")
      */
     protected Logger $logger;
 

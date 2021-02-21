@@ -12,7 +12,7 @@ use Backup\Agent\Service\DatabaseService;
 use Backup\Configuration;
 use Backup\Exception\DatabaseException;
 use Backup\Exception\ToolException;
-use Backup\Logger;
+use Monolog\Logger;
 use Backup\Agent\Model\DatabaseModel;
 use Backup\Tool;
 use Vection\Component\DI\Annotations\Inject;
@@ -30,7 +30,7 @@ class MongoDbService
 
     /**
      * @var Logger
-     * @Inject("Backup\Logger")
+     * @Inject("Monolog\Logger")
      */
     private Logger $logger;
 
@@ -63,7 +63,7 @@ class MongoDbService
             throw new DatabaseException($msg);
         }
 
-        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
+        $this->logger->info(sprintf('Target directory "%s" created.', $name));
 
         try {
             $database->setArchive($this->tool::sanitize($name) . '.mongo.gz');

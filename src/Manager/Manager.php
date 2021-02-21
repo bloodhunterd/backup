@@ -13,7 +13,7 @@ use Backup\Exception\DownloadException;
 use Backup\Exception\DirectoryException;
 use Backup\Exception\ToolException;
 use Backup\Interfaces\Backup;
-use Backup\Logger;
+use Monolog\Logger;
 use Backup\Manager\Model\ServerModel;
 use Backup\Manager\Service\DownloadService;
 use Backup\Report\Report;
@@ -39,7 +39,7 @@ class Manager implements Backup
 
     /**
      * @var Logger
-     * @Inject("Backup\Logger")
+     * @Inject("Monolog\Logger")
      */
     private Logger $logger;
 
@@ -63,14 +63,14 @@ class Manager implements Backup
         $servers = $this->config->getServers();
 
         if (!$servers) {
-            $this->logger->use('app')->warning('No servers set in configuration.');
+            $this->logger->warning('No servers set in configuration.');
         }
 
         foreach ($servers as $server) {
             $serverModel = new ServerModel($server);
 
             if ($serverModel->isDisabled()) {
-                $this->logger->use('app')->info(
+                $this->logger->info(
                     sprintf('Backup of server "%s" is disabled.', $serverModel->getName())
                 );
 
@@ -91,8 +91,8 @@ class Manager implements Backup
 
                 $duration = $this->tool->getDuration();
             } catch (DownloadException | DirectoryException $e) {
-                $this->logger->use('app')->error($e->getMessage());
-                $this->logger->use('app')->debug($e->getTraceAsString());
+                $this->logger->error($e->getMessage());
+                $this->logger->debug($e->getTraceAsString());
 
                 $this->report->add(
                     Report::RESULT_ERROR,
@@ -109,8 +109,8 @@ class Manager implements Backup
             try {
                 $fileSize = (int) $this->tool->execute($cmd)[0];
             } catch (ToolException $e) {
-                $this->logger->use('app')->error($e->getMessage());
-                $this->logger->use('app')->debug($e->getTraceAsString());
+                $this->logger->error($e->getMessage());
+                $this->logger->debug($e->getTraceAsString());
 
                 $fileSize = null;
             }
@@ -128,9 +128,9 @@ class Manager implements Backup
         // Send report
         if ($this->config->isReportEnabled()) {
             if ($this->report->send()) {
-                $this->logger->use('app')->info('Report sent.');
+                $this->logger->info('Report sent.');
             } else {
-                $this->logger->use('app')->error('Failed to sent report.');
+                $this->logger->error('Failed to sent report.');
             }
         }
     }
@@ -152,7 +152,7 @@ class Manager implements Backup
             throw new DirectoryException($msg);
         }
 
-        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
+        $this->logger->info(sprintf('Target directory "%s" created.', $name));
 
         $server->setTarget($this->config->getTargetDirectory() . $server->getTarget());
 
@@ -164,6 +164,6 @@ class Manager implements Backup
             throw new DownloadException($msg, 0, $e);
         }
 
-        $this->logger->use('app')->info(sprintf('Archive "%s" downloaded from server.', $name));
+        $this->logger->info(sprintf('Archive "%s" downloaded from server.', $name));
     }
 }

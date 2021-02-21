@@ -11,6 +11,7 @@ namespace Backup;
 use Backup\Exception\ConfigurationException;
 use Backup\Report\Model\ReportRecipientModel;
 use Backup\Report\Model\ReportSenderModel;
+use Monolog\Logger;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
 use Vection\Component\Validator\Schema\Schema;
@@ -40,7 +41,7 @@ class Configuration
 
     /**
      * @var Logger
-     * @Inject("Backup\Logger")
+     * @Inject("Monolog\Logger")
      */
     private Logger $logger;
 
@@ -71,7 +72,7 @@ class Configuration
 
         $this->settings = yaml_parse($config);
 
-        $this->logger->use('app')->info('Configuration loaded.');
+        $this->logger->info('Configuration loaded.');
     }
 
     /**

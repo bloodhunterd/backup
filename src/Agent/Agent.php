@@ -19,7 +19,7 @@ use Backup\Interfaces\Backup;
 use Backup\Agent\Model\DatabaseModel;
 use Backup\Agent\Model\DirectoryModel;
 use Backup\Agent\Service\DatabaseService;
-use Backup\Logger;
+use Monolog\Logger;
 use Backup\Report\Report;
 use Backup\Tool;
 use Vection\Component\DI\Annotations\Inject;
@@ -43,7 +43,7 @@ class Agent implements Backup
 
     /**
      * @var Logger
-     * @Inject("Backup\Logger")
+     * @Inject("Monolog\Logger")
      */
     private Logger $logger;
 
@@ -85,14 +85,14 @@ class Agent implements Backup
         $directories = $this->config->getDirectories();
 
         if (!$directories) {
-            $this->logger->use('app')->warning('No directories set in configuration.');
+            $this->logger->warning('No directories set in configuration.');
         }
 
         foreach ($directories as $directory) {
             $directoryModel = new DirectoryModel($directory);
 
             if ($directoryModel->isDisabled()) {
-                $this->logger->use('app')->info(
+                $this->logger->info(
                     sprintf('Backup of directory "%s" is disabled.', $directoryModel->getName())
                 );
 
@@ -113,8 +113,8 @@ class Agent implements Backup
 
                 $duration = $this->tool->getDuration();
             } catch (DirectoryException $e) {
-                $this->logger->use('app')->error($e->getMessage());
-                $this->logger->use('app')->debug($e->getTraceAsString());
+                $this->logger->error($e->getMessage());
+                $this->logger->debug($e->getTraceAsString());
 
                 $this->report->add(
                     Report::RESULT_ERROR,
@@ -146,14 +146,14 @@ class Agent implements Backup
         $databases = $this->config->getDatabases();
 
         if (!$databases) {
-            $this->logger->use('app')->warning('No databases set in configuration.');
+            $this->logger->warning('No databases set in configuration.');
         }
 
         foreach ($databases as $database) {
             $databaseModel = new DatabaseModel($database);
 
             if ($databaseModel->isDisabled()) {
-                $this->logger->use('app')->info(
+                $this->logger->info(
                     sprintf('Backup of database "%s" is disabled.', $databaseModel->getName())
                 );
 
@@ -185,8 +185,8 @@ class Agent implements Backup
 
                 $duration = $this->tool->getDuration();
             } catch (DatabaseException $e) {
-                $this->logger->use('app')->error($e->getMessage());
-                $this->logger->use('app')->debug($e->getTraceAsString());
+                $this->logger->error($e->getMessage());
+                $this->logger->debug($e->getTraceAsString());
 
                 $this->report->add(
                     Report::RESULT_ERROR,
@@ -218,9 +218,9 @@ class Agent implements Backup
         // Send report
         if ($this->config->isReportEnabled()) {
             if ($this->report->send()) {
-                $this->logger->use('app')->info('Report sent.');
+                $this->logger->info('Report sent.');
             } else {
-                $this->logger->use('app')->error('Failed to sent report.');
+                $this->logger->error('Failed to sent report.');
             }
         }
     }
@@ -230,7 +230,7 @@ class Agent implements Backup
      *
      * @param DirectoryModel $directory
      *
-     * @throws DirectoryException
+     * @throws DirectoryException|ToolException
      */
     public function backupDirectory(DirectoryModel $directory): void
     {
@@ -242,7 +242,7 @@ class Agent implements Backup
             throw new DirectoryException($msg);
         }
 
-        $this->logger->use('app')->info(sprintf('Target directory "%s" created.', $name));
+        $this->logger->info(sprintf('Target directory "%s" created.', $name));
 
         $directory->setArchive(Tool::sanitize($name) . '.tar.' . $this->tool->getArchiveSuffix());
 
@@ -256,7 +256,7 @@ class Agent implements Backup
                 throw new DirectoryException($msg, 0, $e);
             }
 
-            $this->logger->use('app')->info(sprintf('Command "%s" was executed.', 'BEFORE'));
+            $this->logger->info(sprintf('Command "%s" was executed.', 'BEFORE'));
         }
 
         $this->tool->createArchive($directory);
@@ -271,7 +271,7 @@ class Agent implements Backup
                 throw new DirectoryException($msg, 0, $e);
             }
 
-            $this->logger->use('app')->info(sprintf('Command "%s" was executed.', 'AFTER'));
+            $this->logger->info(sprintf('Command "%s" was executed.', 'AFTER'));
         }
     }
 }
