@@ -4,4 +4,4 @@ parameters:
         - src
         - tests
     bootstrapFiles:
-        - %rootDir%/../../../config/path.php
+        - %rootDir%/../../../config/constants.php

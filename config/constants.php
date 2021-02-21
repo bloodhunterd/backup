@@ -6,6 +6,11 @@
 
 declare(strict_types = 1);
 
+# Logger
+define('LOGGER_APP', 'APP');
+define('LOGGER_CLI', 'CLI');
+
+# Paths
 define('ROOT_DIR', __DIR__ . DIRECTORY_SEPARATOR . '..');
 define('RES_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'res');
 define('VENDOR_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor');

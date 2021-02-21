@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 use Backup\Bootstrap;
 
-require_once __DIR__ . '/config/path.php';
+require_once __DIR__ . '/config/constants.php';
 require_once VENDOR_DIR . DIRECTORY_SEPARATOR . 'autoload.php';
 
 $shortOptions = [
@@ -25,9 +25,9 @@ try {
         throw new RuntimeException('Failed to parse given arguments. Maybe they are invalid or missing?');
     }
 
-    if (is_string($options['config'])) {
+    if (isset($options['config']) && is_string($options['config'])) {
         $configPath = $options['config'];
-    } else if (is_string($options['c'])) {
+    } else if (isset($options['c']) && is_string($options['c'])) {
         $configPath = $options['c'];
     } else {
         throw new RuntimeException('Parameter "-c" or "--config" for the configuration file path is missing.');
