@@ -112,7 +112,7 @@ class Configuration
      */
     public function isDebugEnabled(): bool
     {
-        return $this->settings['debug'];
+        return $this->settings['debug'] ?? false;
     }
 
     /**
