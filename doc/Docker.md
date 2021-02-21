@@ -25,8 +25,8 @@ services:
 
 #### Environment
 
-| ENV | Values&#185; | Description
-| --- | ------------ | -----------
+| Variable | Value | Description
+| -------- | ----- | -----------
 | CRON_HOUR | 0 - 23 | Hour of CRON execution.
 | CRON_MINUTE | 0 - 59 | Minute of CRON execution.
 | SMTP_HOST | *FQDN or IP* | Mail server address.

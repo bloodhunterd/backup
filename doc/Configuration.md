@@ -1,16 +1,56 @@
+The configuration format is **YAML**.
+
 ## General
 
-The configuration format is **YAML**. The previously used **JSON** format is now deprecated, so no configuration example will be provided.
+These settings are valid for both, Agent and Manager configuration.
+
+| Variable | Value | Mandatory | Description
+| -------- | ----- | :-------: | -----------
+| debug | true\|false | &#10008; | Enable or disable debug mode.
+| language | Locale | &#10008; | Report language.
+| report | See [Report](#report) | &#10004; | Report settings.
+| target | See [Target](#target) | &#10004; | Target settings.
+| timezone | [PHP: List of supported timezones - Manual](https://www.php.net/manual/en/timezones.php) | &#10008; | Report date and time calculation.
+
+### Report
+
+| Variable | Value | Mandatory |  Description
+| -------- | ----- | :-------: |  -----------
+| recipients | See [Recipients](#recipients) | &#10004; | Recipient settings.
+| sender | See [Sender](#sender) | &#10004; | Sender settings.
+| subject | Text | &#10004; | Email subject.
+
+#### Recipients
+
+| Variable | Value | Mandatory |  Description
+| -------- | ----- | :-------: |  -----------
+| address | Email address | &#10004; | Email address.
+| name | Text | &#10008; | Recipient name.
+| type | to\|cc\|bcc | &#10008; | Sending type.
+
+#### Sender
+
+| Variable | Value | Mandatory |  Description
+| -------- | ----- | :-------: |  -----------
+| address | Email address | &#10004; | Email address.
+| name | Text | &#10008; | Recipient name.
+
+#### Target
+
+| Variable | Value | Mandatory |  Description
+| -------- | ----- | :-------: |  -----------
+| directory | Path | &#10004; | Absolute path to target directory.
+
+### Example
 
 ```yaml
 debug: false
-timezone: Europe/Berlin
 language: de_DE.utf8
 report:
   sender:
     address: noreply@example.com
-    name: Backup Manager
-  subject: Download report
+    name: Backup
+  subject: Report
   recipients:
     - address: recipient-1@example.com
       name: Recipient 1
@@ -20,6 +60,7 @@ report:
       type: bcc
 target:
   directory: /backup
+timezone: Europe/Berlin
 ```
 
 ## Agent
