@@ -47,6 +47,7 @@ services:
 | ------ | ---- | :-------: | -----------
 | Backup directory | /backup/ | &#10007; | Backup directory path.
 | Configuration | /srv/backup.yml | &#10003; | Configuration file path.
+| Log | /srv/backup.log | &#10007; | Log file path.
 
 | &#10004; Yes | &#10008; No
 | ------------ | -----------

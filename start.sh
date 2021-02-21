@@ -14,7 +14,7 @@ echo "${TZ}" > /etc/timezone
 # Cron
 # ===================================================
 
-echo "${CRON_MINUTE} ${CRON_HOUR} * * * php /srv/backup/cli.php -c /srv/backup.yml > /dev/null 2>&1" > /etc/cron.d/backup
+echo "${CRON_MINUTE} ${CRON_HOUR} * * * php /srv/backup/cli.php -c /srv/backup.yml >> /srv/backup.log 2>&1" > /etc/cron.d/backup
 
 crontab /etc/cron.d/backup
 
@@ -46,4 +46,4 @@ mSMTP
 # Process log
 # ===================================================
 
-tail -f /var/log/backup.log
+tail -f /srv/backup.log
