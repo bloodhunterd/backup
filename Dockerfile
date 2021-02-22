@@ -7,7 +7,7 @@ FROM debian:stable-slim
 # Environment vars
 # ===================================================
 
-ARG PHP_VERSION=7.4
+ARG PHP_VERSION=8.0
 
 ENV CRON_MINUTE 0
 ENV CRON_HOUR 3
@@ -78,8 +78,7 @@ RUN echo "sendmail_path = /usr/bin/msmtp -t" >> /etc/php/${PHP_VERSION}/cli/php.
 # ===================================================
 
 RUN mkdir /backup
-
-RUN touch /var/log/backup.log
+RUN touch /srv/backup.log
 
 COPY ./config /srv/backup/config
 COPY ./res /srv/backup/res

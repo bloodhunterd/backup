@@ -1,11 +1,10 @@
 {
     "name": "bloodhunterd/backup",
-    "description": "Backup",
+    "description": "Backup is an application to organize file and database backups. It supports compression, encrypted transfer, email reports and command execution before and after a process.",
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-bz2": "*",
         "ext-intl": "*",
-        "ext-json": "*",
         "ext-yaml": "*",
         "monolog/monolog": "^2.0",
         "vection-framework/di-container": "dev-master",

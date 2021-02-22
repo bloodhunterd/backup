@@ -35,7 +35,7 @@ These settings are valid for both, Agent and Manager configuration.
 | address | Email address | &#10004; | Email address.
 | name | Text | &#10008; | Recipient name.
 
-#### Target
+### Target
 
 | Variable | Value | Mandatory |  Description
 | -------- | ----- | :-------: |  -----------
