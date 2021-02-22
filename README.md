@@ -26,11 +26,11 @@ Backup is an application to organize file and database backups. It supports comp
 ### Agent
 
 * Linux, Windows or MacOS
-* [PHP](https://www.php.net/) **^7.4**
+* [PHP](https://www.php.net/) **^7.4** or **^8.0**
   * BZ2 *(optional)*
   * CLI
   * INTL
-  * JSON
+  * YAML
 
 ### Manager
 
