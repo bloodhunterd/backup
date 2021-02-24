@@ -153,11 +153,11 @@ class Report
         $sender = $name ? "{$name} <{$address}>" : $address;
 
         $headers = [
-            'From: ' . $sender,
-            'Reply-To: ' . $sender,
-            'MIME-Version: 1.0',
-            'Content-Type: text/html; charset=utf-8',
-            'X-Application: Backup by BloodhunterD'
+            'From' => $sender,
+            'Reply-To' => $sender,
+            'MIME-Version' => '1.0',
+            'Content-Type' => 'text/html; charset=utf-8',
+            'X-Application' => 'Backup by BloodhunterD'
         ];
 
         $to = [];
@@ -183,11 +183,11 @@ class Report
         }
 
         if ($cc) {
-            $headers[] = 'Cc: ' . implode(', ', $cc);
+            $headers['Cc'] = implode(', ', $cc);
         }
 
         if ($bcc) {
-            $headers[] = 'Bcc: ' . implode(', ', $bcc);
+            $headers['Bcc'] = implode(', ', $bcc);
         }
 
         $types = [
@@ -251,7 +251,7 @@ class Report
             implode(', ', $to),
             '=?UTF-8?B?' . base64_encode($this->subject) . '?=',
             $mail,
-            implode(PHP_EOL, $headers)
+            $headers
         );
     }
 
