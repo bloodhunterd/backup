@@ -2,6 +2,11 @@
 
 All notable changes will be documented in this file.
 
+<a name="v2-0-1"></a>
+## [2.0.1](https://github.com/bloodhunterd/backup/releases/tag/2.0.1) &#9839; 24.02.2021
+
+* Fixed possible missing HTML formatting in mail report with PHP 8.0
+
 <a name="v2-0-0"></a>
 ## [2.0.0](https://github.com/bloodhunterd/backup/releases/tag/2.0.0) &#9839; 22.02.2021
 
