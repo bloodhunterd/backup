@@ -10,6 +10,7 @@ namespace Backup;
 
 use Backup\Exception\ToolException;
 use Backup\Interfaces\Compressible;
+use Locale;
 use Monolog\Logger;
 use Vection\Component\DI\Annotations\Inject;
 use Vection\Component\DI\Traits\AnnotationInjection;
@@ -55,6 +56,15 @@ class Tool
      */
     public function setTimezone(string $timezone): void
     {
+        if (!$timezone) {
+            $this->logger->info(sprintf(
+                'The timezone is not set. Use default timezone "%s".',
+                date_default_timezone_get()
+            ));
+
+            return;
+        }
+
         if (date_default_timezone_set($timezone)) {
             $this->logger->info(sprintf('Timezone set to "%s".', $timezone));
 
@@ -87,6 +97,15 @@ class Tool
      */
     public function setLanguage(string $locale): void
     {
+        if (!$locale) {
+            $this->logger->info(sprintf(
+                'The language is not specified. Use default language "%s".',
+                Locale::getDefault()
+            ));
+
+            return;
+        }
+
         if ($this->setLocale(LC_ALL, $locale)) {
             $this->logger->info(sprintf('Language set to "%s".', $locale));
 
@@ -94,7 +113,7 @@ class Tool
         }
 
         $this->logger->warning(sprintf(
-            'The language "%s" is either not supported or installed. Fallback to "%s".',
+            'The language "%s" is either not supported or installed. Use fallback language "%s" instead.',
             $locale,
             $this->setLocale(LC_ALL, '0')
         ));
