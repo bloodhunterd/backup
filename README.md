@@ -25,22 +25,25 @@ Backup is an application to organize file and database backups. It supports comp
 
 ### Agent
 
-* Linux, Windows or MacOS
+**OS**: Linux, Windows or MacOS
+
 * [PHP](https://www.php.net/) **^7.4** or **^8.0**
   * BZ2 *(optional)*
   * CLI
   * INTL
   * YAML
 
+*To backup MariaDB or MySQL databases, **mysqldump** is needed.*
+
 ### Manager
+
+**OS**: Linux or MacOS
 
 * All **Agent** requirements
 * [OpenSSH](https://www.openssh.com/) client
 * [rsync](https://linux.die.net/man/1/rsync)
 
-### Optional
-
-* A Mail Transfer Agent like [Exim](https://www.exim.org/) or [Postfix](http://www.postfix.org/) to send reports.
+*To send reports a mail transfer agent like **[Exim](https://www.exim.org/)** or **[Postfix](http://www.postfix.org/)** is needed.*
 
 ## Deployment
 
