@@ -2,6 +2,11 @@
 
 All notable changes will be documented in this file.
 
+<a name="v2-0-2"></a>
+## [2.0.2](https://github.com/bloodhunterd/backup/releases/tag/2.0.2) &#9839; 26.03.2021
+
+* Fixed file name escaping on file size calculation.
+
 <a name="v2-0-1"></a>
 ## [2.0.1](https://github.com/bloodhunterd/backup/releases/tag/2.0.1) &#9839; 24.02.2021
 
