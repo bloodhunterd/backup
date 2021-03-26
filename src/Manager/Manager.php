@@ -104,7 +104,7 @@ class Manager implements Backup
                 continue;
             }
 
-            $cmd = sprintf('du -sb %s', $serverModel->getTarget());
+            $cmd = sprintf('du -sb %s', escapeshellarg($serverModel->getTarget()));
 
             try {
                 $fileSize = (int) $this->tool->execute($cmd)[0];

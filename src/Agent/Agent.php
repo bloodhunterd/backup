@@ -85,7 +85,7 @@ class Agent implements Backup
         $directories = $this->config->getDirectories();
 
         if (!$directories) {
-            $this->logger->warning('No directories set in configuration.');
+            $this->logger->info('No directories set in configuration.');
         }
 
         foreach ($directories as $directory) {
@@ -146,7 +146,7 @@ class Agent implements Backup
         $databases = $this->config->getDatabases();
 
         if (!$databases) {
-            $this->logger->warning('No databases set in configuration.');
+            $this->logger->info('No databases set in configuration.');
         }
 
         foreach ($databases as $database) {
