@@ -31,6 +31,10 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-dev --no-progress
 
+      - name: Set access rights
+        run: |
+          sudo chown root:root config res src vendor cli.php composer.json composer.lock LICENSE README.md
+
       - name: Create application
         id: create_application
         run: |

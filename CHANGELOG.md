@@ -2,6 +2,11 @@
 
 All notable changes will be documented in this file.
 
+<a name="v2-0-3"></a>
+## [2.0.3](https://github.com/bloodhunterd/backup/releases/tag/2.0.3) &#9839; 27.03.2021
+
+* Fixed user and group access rights for release package.
+
 <a name="v2-0-2"></a>
 ## [2.0.2](https://github.com/bloodhunterd/backup/releases/tag/2.0.2) &#9839; 26.03.2021
 
