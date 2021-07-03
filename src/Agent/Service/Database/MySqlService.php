@@ -27,7 +27,7 @@ class MySqlService extends DatabaseService
     protected const ENV = '\$';
     protected const USER = 'MYSQL_USER';
 
-    private const EXCLUDED_SCHEMATA = ['information_schema', 'mysql', 'performance_schema', 'sys'];
+    private const EXCLUDED_SCHEMATA = ['information_schema', 'performance_schema', 'sys'];
     private const NO_PASSWORD = 'MYSQL_ALLOW_EMPTY_PASSWORD';
     private const PASSWORDS = ['MYSQL_ROOT_PASSWORD', 'MYSQL_PASSWORD'];
 
